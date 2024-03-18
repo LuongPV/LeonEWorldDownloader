@@ -26,11 +26,11 @@ fun SplashScreen(
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         visible = !visible
-        delay(4000)
+        delay(DurationNavigateHome)
         onNavigateToHome.invoke()
     }
-    Logo(visible = visible, resId = R.drawable.bg_heading, duration = 2000, modifier = modifier)
-    Logo(visible = visible, resId = R.drawable.bg_sub, duration = 5000, modifier = modifier)
+    Logo(visible = visible, resId = R.drawable.bg_heading, duration = DurationHeadingLogo, modifier = modifier)
+    Logo(visible = visible, resId = R.drawable.bg_sub, duration = DurationSubLogo, modifier = modifier)
 }
 
 @Composable
@@ -49,6 +49,9 @@ private fun Logo(visible: Boolean, resId: Int, duration: Int, modifier: Modifier
 }
 
 const val RouteSplash = "Splash"
+private const val DurationHeadingLogo = 2000
+private const val DurationSubLogo = 5000
+private const val DurationNavigateHome = 4000L
 
 @Preview(showBackground = true)
 @Composable
