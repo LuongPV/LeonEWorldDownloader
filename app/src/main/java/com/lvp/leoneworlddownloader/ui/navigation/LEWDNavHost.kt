@@ -22,7 +22,7 @@ fun LEWDNavHost(
         startDestination = RouteSplash) {
         composable(RouteSplash) {
             SplashScreen(
-                onNavigateToHome = {
+                onSplashFinished = {
                     navController.navigate(RouteHome)
                 }
             )

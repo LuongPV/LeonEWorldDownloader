@@ -77,6 +77,9 @@ dependencies {
 
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("io.coil-kt:coil-gif:2.4.0")
 }
 
 // Allow references to generated code
