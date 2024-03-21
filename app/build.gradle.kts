@@ -80,6 +80,10 @@ dependencies {
 
     implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation ("io.coil-kt:coil-gif:2.4.0")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 }
 
 // Allow references to generated code
