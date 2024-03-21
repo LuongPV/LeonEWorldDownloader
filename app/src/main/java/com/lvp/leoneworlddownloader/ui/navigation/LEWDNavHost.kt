@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.lvp.leoneworlddownloader.ui.home.HomeScreen
 import com.lvp.leoneworlddownloader.ui.home.RouteHome
+import com.lvp.leoneworlddownloader.ui.settings.RouteSettings
+import com.lvp.leoneworlddownloader.ui.settings.SettingsScreen
 import com.lvp.leoneworlddownloader.ui.splash.RouteSplash
 import com.lvp.leoneworlddownloader.ui.splash.SplashScreen
 
@@ -29,7 +31,10 @@ fun LEWDNavHost(
             )
         }
         composable(RouteHome) {
-            HomeScreen(hiltViewModel())
+            HomeScreen(hiltViewModel(), navController)
+        }
+        composable(RouteSettings) {
+            SettingsScreen()
         }
     }
 }

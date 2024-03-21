@@ -18,13 +18,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
+import com.lvp.leoneworlddownloader.ui.settings.RouteSettings
 import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import kotlinx.coroutines.launch
+
+const val RouteHome = "Home"
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -57,7 +63,7 @@ fun HomeScreen(
 
             },
             onSettingsClicked = {
-
+                navController.navigate(RouteSettings)
             },
             onAboutClicked = {
 
@@ -69,12 +75,10 @@ fun HomeScreen(
     }
 }
 
-const val RouteHome = "Home"
-
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
     LeonEWorldDownloaderTheme {
-        HomeScreen(viewModel = hiltViewModel())
+        HomeScreen(viewModel = hiltViewModel(), navController = rememberNavController())
     }
 }
