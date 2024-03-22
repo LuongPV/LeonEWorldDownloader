@@ -15,11 +15,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 
@@ -52,7 +54,7 @@ fun GeneralDialog(
             Row {
                 Box(Modifier.weight(1f))
                 TextButton(onClick = onDismiss) {
-                    Text(text = "Close")
+                    Text(text = stringResource(R.string.txt_dlg_close))
                 }
             }
         }

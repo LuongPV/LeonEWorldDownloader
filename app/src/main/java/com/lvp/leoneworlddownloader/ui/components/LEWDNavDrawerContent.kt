@@ -2,7 +2,6 @@ package com.lvp.leoneworlddownloader.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +52,7 @@ fun LEWDNavDrawerContent(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "Version: 0.0.1",
+            text = stringResource(R.string.txt_version, "0.0.1"),
             style = TextStyle(
                 fontSize = 14.sp,
                 color = Color.Gray,
@@ -79,7 +79,7 @@ private fun TopLabel(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = "Leon E World Downloader",
+                    text = stringResource(R.string.txt_human_readable_app_name),
                     style = TextStyle(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -87,7 +87,7 @@ private fun TopLabel(
                     ),
                 )
                 Text(
-                    text = "World's fastest downloader",
+                    text = stringResource(R.string.txt_app_name_description),
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = Color.Gray,
@@ -160,11 +160,23 @@ private fun Body(
     }
     Column {
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_filter, "Filter", "Select which types of downloads to be shown", onFilterClicked)
+        Item(
+            R.drawable.ic_filter,
+            stringResource(R.string.txt_menu_filter),
+            stringResource(R.string.txt_sub_menu_filter), onFilterClicked
+        )
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_settings, "Settings", "Modify your preferences", onSettingsClicked)
+        Item(
+            R.drawable.ic_settings,
+            stringResource(R.string.txt_menu_settings),
+            stringResource(R.string.txt_menu_sub_settings), onSettingsClicked
+        )
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_about, "About", "More details on the application info", onAboutClicked)
+        Item(
+            R.drawable.ic_about,
+            stringResource(R.string.txt_menu_about),
+            stringResource(R.string.txt_sub_menu_about), onAboutClicked
+        )
     }
 }
 

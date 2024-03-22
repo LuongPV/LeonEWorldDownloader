@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -89,10 +90,10 @@ private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
         Spacer(modifier = Modifier.size(8.dp))
         Column {
             Text(
-                text = "Settings",
+                text = stringResource(R.string.txt_settings),
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
             )
-            Text(text = "Modify your preferences", color = Color(0xFF838383))
+            Text(text = stringResource(R.string.txt_sub_modify_your_preferences), color = Color(0xFF838383))
         }
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -111,27 +112,30 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
             .padding(all = 16.dp)
     ) {
         Text(
-            text = "General",
+            text = stringResource(R.string.txt_group_general),
             style = TextStyle(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
             ),
         )
         PaddingItemSeparator()
-        var selectedThemeValue by remember { mutableStateOf("Light") }
+        val themeLight = stringResource(R.string.val_theme_light)
+        val themeDark = stringResource(R.string.val_theme_dark)
+        val themeSystem = stringResource(R.string.val_theme_system)
+        var selectedThemeValue by remember { mutableStateOf(themeLight) }
         var isThemeSelectionShown by remember { mutableStateOf(false) }
         ClickSettingItem(
             icon = R.drawable.ic_theme,
-            title = "Theme",
+            title = stringResource(R.string.txt_setting_theme),
             subtitle = selectedThemeValue
         ) {
             isThemeSelectionShown = true
         }
         if (isThemeSelectionShown) {
             ValueSelectionDialog(
-                text = "Choose theme",
+                text = stringResource(R.string.txt_dlg_choose_theme),
                 selectedValue = selectedThemeValue,
-                values = listOf("Light", "Dark", "System"),
+                values = listOf(themeLight, themeDark, themeSystem),
                 onValueChange = {
                     selectedThemeValue = it
                 },
@@ -143,7 +147,7 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
         PaddingItemSeparator()
         SwitchSettingItem(
             icon = R.drawable.ic_percentage,
-            title = "Show download percentage",
+            title = stringResource(R.string.txt_setting_show_download_percentage),
             isChecked = isChecked,
             onCheckedChange = {
                 isChecked = it
@@ -161,7 +165,7 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
         .padding(all = 16.dp)
 ) {
     Text(
-        text = "Download",
+        text = stringResource(R.string.txt_group_download),
         style = TextStyle(
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -171,47 +175,49 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
     var selectedValue by remember { mutableStateOf("4") }
     SelectionSettingItem(
         icon = R.drawable.ic_maximum_concurrent_downloads,
-        title = "Maximum concurrent downloads",
+        title = stringResource(R.string.txt_maximum_concurrent_downloads),
         selectedValue = selectedValue,
-        values = listOf("1", "2", "3", "4", "5", "6", "7", "8"),
+        values = listOf(1, 2, 3, 4, 5, 6, 7, 8).map { "$it" },
         onValueChange = {
             selectedValue = it
         }
     )
     PaddingItemSeparator()
+    val downloadSpeedKBSValue = stringResource(R.string.download_speed_kb_s)
+    val downloadSpeedMBSValue = stringResource(R.string.download_speed_mb_s)
     InputValueSettingItem(
         icon = R.drawable.ic_maximum_download_speed,
-        title = "Maximum download speed",
+        title = stringResource(R.string.txt_maximum_download_speed),
         unitContent = {
             Spacer(modifier = Modifier.width(16.dp))
-            var selectedSpeedValue by remember { mutableStateOf("KB/s") }
+            var selectedSpeedValue by remember { mutableStateOf(downloadSpeedKBSValue) }
             val isItemSelected: SingleDataConverterCallback<String, Boolean> = {
                 it == selectedSpeedValue
             }
             Row(
                 modifier = Modifier.selectable(
-                    selected = isItemSelected("KB/s"),
+                    selected = isItemSelected(stringResource(R.string.download_speed_kb_s)),
                     onClick = {
-                        selectedSpeedValue = "KB/s"
+                        selectedSpeedValue = downloadSpeedKBSValue
                     }
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                RadioButton(selected = isItemSelected("KB/s"), onClick = null)
-                Text(text = "KB/s")
+                RadioButton(selected = isItemSelected(downloadSpeedKBSValue), onClick = null)
+                Text(text = downloadSpeedKBSValue)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Row(
                 modifier = Modifier.selectable(
-                    selected = isItemSelected("MB/s"),
+                    selected = isItemSelected(downloadSpeedMBSValue),
                     onClick = {
-                        selectedSpeedValue = "MB/s"
+                        selectedSpeedValue = downloadSpeedMBSValue
                     }
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                RadioButton(selected = isItemSelected("MB/s"), onClick = null)
-                Text(text = "MB/s")
+                RadioButton(selected = isItemSelected(downloadSpeedMBSValue), onClick = null)
+                Text(text = downloadSpeedMBSValue)
             }
         },
         onValueChange = {

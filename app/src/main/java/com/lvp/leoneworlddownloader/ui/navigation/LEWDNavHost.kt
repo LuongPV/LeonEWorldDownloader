@@ -22,7 +22,7 @@ fun LEWDNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = RouteSettings
+        startDestination = RouteHome
     ) {
         composable(RouteSplash) {
             SplashScreen(
