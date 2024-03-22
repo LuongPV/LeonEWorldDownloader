@@ -18,20 +18,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
-import com.lvp.leoneworlddownloader.ui.settings.RouteSettings
 import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
+import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import kotlinx.coroutines.launch
 
 const val RouteHome = "Home"
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
-    navController: NavHostController,
     modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
+    onNavigateFilter: EmptyDataCallback,
+    onNavigateSettings: EmptyDataCallback,
+    onNavigateAbout: EmptyDataCallback,
 ) {
     Column(
         modifier = modifier,
@@ -59,15 +59,9 @@ fun HomeScreen(
         }
         LEWDNavigationDrawer(
             drawerState = drawerState,
-            onFilterClicked = {
-
-            },
-            onSettingsClicked = {
-                navController.navigate(RouteSettings)
-            },
-            onAboutClicked = {
-
-            },
+            onFilterClicked = onNavigateFilter,
+            onSettingsClicked = onNavigateSettings,
+            onAboutClicked = onNavigateAbout,
         ) {
             Text(text = "Home", modifier = modifier)
             Spacer(modifier = Modifier.size(32.dp))
@@ -79,6 +73,10 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     LeonEWorldDownloaderTheme {
-        HomeScreen(viewModel = hiltViewModel(), navController = rememberNavController())
+        HomeScreen(
+            viewModel = hiltViewModel(),
+            onNavigateFilter = {},
+            onNavigateSettings = {},
+            onNavigateAbout = {})
     }
 }

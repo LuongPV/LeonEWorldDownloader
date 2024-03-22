@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
+import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
 @Composable
 fun LEWDNavDrawerContent(
@@ -53,7 +54,7 @@ fun LEWDNavDrawerContent(
         Text(
             text = "Version: 0.0.1",
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 color = Color.Gray,
             ),
         )
@@ -123,12 +124,13 @@ private fun Body(
     @Composable
     fun Item(
         icon: Int,
-        text: String,
+        title: String,
+        subtitle: String,
         onClick: EmptyDataCallback,
     ) {
         Row(
             modifier = Modifier
-                .clickable(onClick = onClick)
+                .noRippleClickable(onClick = onClick)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -138,22 +140,31 @@ private fun Body(
                 contentDescription = null
             )
             Spacer(modifier = Modifier.size(16.dp))
-            Text(
-                text = text,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                ),
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                    ),
+                )
+                Text(
+                    text = subtitle,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = Color(0xFF838383)
+                    ),
+                )
+            }
         }
     }
     Column {
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_filter, "Filter", onFilterClicked)
+        Item(R.drawable.ic_filter, "Filter", "Select which types of downloads to be shown", onFilterClicked)
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_settings, "Settings", onSettingsClicked)
+        Item(R.drawable.ic_settings, "Settings", "Modify your preferences", onSettingsClicked)
         Spacer(modifier = Modifier.size(16.dp))
-        Item(R.drawable.ic_about, "About", onAboutClicked)
+        Item(R.drawable.ic_about, "About", "More details on the application info", onAboutClicked)
     }
 }
 

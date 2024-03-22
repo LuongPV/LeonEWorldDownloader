@@ -22,7 +22,8 @@ fun LEWDNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = RouteSplash) {
+        startDestination = RouteSplash
+    ) {
         composable(RouteSplash) {
             SplashScreen(
                 onSplashFinished = {
@@ -31,10 +32,19 @@ fun LEWDNavHost(
             )
         }
         composable(RouteHome) {
-            HomeScreen(hiltViewModel(), navController)
+            HomeScreen(
+                viewModel = hiltViewModel(),
+                onNavigateFilter = {},
+                onNavigateSettings = {
+                    navController.navigate(RouteSettings)
+                },
+                onNavigateAbout = {},
+            )
         }
         composable(RouteSettings) {
-            SettingsScreen()
+            SettingsScreen(onBack = {
+                navController.popBackStack()
+            })
         }
     }
 }

@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.ComposableContent
+import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
 
 const val RouteSettings = "Settings"
@@ -38,17 +43,45 @@ const val RouteSettings = "Settings"
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
+    onBack: EmptyDataCallback,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(all = 16.dp)
     ) {
-        Text(text = "Settings", style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold))
-        Spacer(modifier = Modifier.height(32.dp))
-        GeneralSettings()
+        TopBar(onBack = onBack)
         Spacer(modifier = Modifier.height(16.dp))
+        GeneralSettings()
         DownloadSettings()
+    }
+}
+
+@Composable
+private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBack) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(id = R.drawable.ic_settings),
+            contentDescription = null,
+            modifier = Modifier.size(36.dp)
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Column {
+            Text(
+                text = "Settings",
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            )
+            Text(text = "Modify your preferences", color = Color(0xFF838383))
+        }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -57,13 +90,14 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(all = 16.dp)
             .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
             .padding(all = 16.dp)
     ) {
         Text(
             text = "General",
             style = TextStyle(
-                fontSize = 28.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
             ),
         )
@@ -85,13 +119,14 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
 private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
     modifier = modifier
         .fillMaxWidth()
+        .padding(all = 16.dp)
         .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
         .padding(all = 16.dp)
 ) {
     Text(
         text = "Download",
         style = TextStyle(
-            fontSize = 28.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
         ),
     )
@@ -247,6 +282,6 @@ private fun ItemSeparator(modifier: Modifier = Modifier) = Box(
 @Composable
 private fun SettingsScreenPreview() {
     LeonEWorldDownloaderTheme {
-        SettingsScreen(modifier = Modifier.background(Color.White))
+        SettingsScreen(modifier = Modifier.background(Color.White), onBack = {})
     }
 }
