@@ -6,6 +6,8 @@ typealias EmptyDataCallback = () -> Unit
 
 typealias SingleDataCallback<T> = (T) -> Unit
 
+typealias SingleDataConverterCallback<T, R> = (T) -> R
+
 typealias DoubleDataCallback<T, R> = (T, R) -> Unit
 
 typealias ComposableContent = @Composable () -> Unit

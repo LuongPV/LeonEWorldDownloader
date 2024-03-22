@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +47,7 @@ import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
+import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
 import com.lvp.leoneworlddownloader.utils.isInt
 import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
@@ -179,7 +182,38 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
     InputValueSettingItem(
         icon = R.drawable.ic_maximum_download_speed,
         title = "Maximum download speed",
-        unit = "KB/s",
+        unitContent = {
+            Spacer(modifier = Modifier.width(16.dp))
+            var selectedSpeedValue by remember { mutableStateOf("KB/s") }
+            val isItemSelected: SingleDataConverterCallback<String, Boolean> = {
+                it == selectedSpeedValue
+            }
+            Row(
+                modifier = Modifier.selectable(
+                    selected = isItemSelected("KB/s"),
+                    onClick = {
+                        selectedSpeedValue = "KB/s"
+                    }
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                RadioButton(selected = isItemSelected("KB/s"), onClick = null)
+                Text(text = "KB/s")
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                modifier = Modifier.selectable(
+                    selected = isItemSelected("MB/s"),
+                    onClick = {
+                        selectedSpeedValue = "MB/s"
+                    }
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                RadioButton(selected = isItemSelected("MB/s"), onClick = null)
+                Text(text = "MB/s")
+            }
+        },
         onValueChange = {
 
         })
@@ -236,31 +270,35 @@ private fun SelectionSettingItem(
 ) {
     SettingItem(modifier = modifier, icon = icon, title = title) {
         Spacer(modifier = Modifier.height(4.dp))
-        var isSelectionShown by remember { mutableStateOf(false) }
         Row(
-            modifier = Modifier
-                .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(8.dp))
-                .padding(8.dp)
-                .noRippleClickable { isSelectionShown = true },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = selectedValue, modifier = Modifier.padding(horizontal = 16.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(id = R.drawable.ic_dropdown),
-                modifier = Modifier.size(16.dp),
-                contentDescription = null,
-            )
-            if (isSelectionShown) {
-                ValueSelectionDialog(
-                    text = "Select maximum concurrent downloads",
-                    selectedValue = selectedValue,
-                    values = values,
-                    onValueChange = onValueChange,
-                    onDismiss = {
-                        isSelectionShown = false
-                    },
+            var isSelectionShown by remember { mutableStateOf(false) }
+            Row(
+                modifier = Modifier
+                    .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+                    .noRippleClickable { isSelectionShown = true },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = selectedValue, modifier = Modifier.padding(horizontal = 16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.ic_dropdown),
+                    modifier = Modifier.size(16.dp),
+                    contentDescription = null,
                 )
+                if (isSelectionShown) {
+                    ValueSelectionDialog(
+                        text = "Select maximum concurrent downloads",
+                        selectedValue = selectedValue,
+                        values = values,
+                        onValueChange = onValueChange,
+                        onDismiss = {
+                            isSelectionShown = false
+                        },
+                    )
+                }
             }
         }
     }
@@ -271,7 +309,7 @@ private fun InputValueSettingItem(
     modifier: Modifier = Modifier,
     icon: Int,
     title: String,
-    unit: String?,
+    unitContent: ComposableContent,
     onValueChange: SingleDataCallback<String>,
 ) {
     SettingItem(modifier = modifier, icon = icon, title = title) {
@@ -313,10 +351,7 @@ private fun InputValueSettingItem(
                     .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(4.dp))
                     .padding(4.dp)
             )
-            unit?.let {
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = it, color = Color(0xFF838383))
-            }
+            unitContent.invoke()
         }
     }
 }
