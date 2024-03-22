@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -22,21 +24,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDialog
 import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
+import com.lvp.leoneworlddownloader.utils.isInt
+import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
 const val RouteSettings = "Settings"
 
@@ -87,6 +97,9 @@ private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
 
 @Composable
 private fun GeneralSettings(modifier: Modifier = Modifier) {
+    var isChecked by remember {
+        mutableStateOf(false)
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -102,14 +115,35 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
             ),
         )
         PaddingItemSeparator()
-        ClickSettingItem(icon = R.drawable.ic_theme, title = "Theme", subtitle = "Dark")
+        var selectedThemeValue by remember { mutableStateOf("Light") }
+        var isThemeSelectionShown by remember { mutableStateOf(false) }
+        ClickSettingItem(
+            icon = R.drawable.ic_theme,
+            title = "Theme",
+            subtitle = selectedThemeValue
+        ) {
+            isThemeSelectionShown = true
+        }
+        if (isThemeSelectionShown) {
+            ValueSelectionDialog(
+                text = "Choose theme",
+                selectedValue = selectedThemeValue,
+                values = listOf("Light", "Dark", "System"),
+                onValueChange = {
+                    selectedThemeValue = it
+                },
+                onDismiss = {
+                    isThemeSelectionShown = false
+                },
+            )
+        }
         PaddingItemSeparator()
         SwitchSettingItem(
             icon = R.drawable.ic_percentage,
             title = "Show download percentage",
-            isChecked = true,
+            isChecked = isChecked,
             onCheckedChange = {
-
+                isChecked = it
             }
         )
     }
@@ -131,11 +165,15 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
         ),
     )
     PaddingItemSeparator()
+    var selectedValue by remember { mutableStateOf("4") }
     SelectionSettingItem(
         icon = R.drawable.ic_maximum_concurrent_downloads,
         title = "Maximum concurrent downloads",
-        selectedValue = "4",
-        values = emptyList()
+        selectedValue = selectedValue,
+        values = listOf("1", "2", "3", "4", "5", "6", "7", "8"),
+        onValueChange = {
+            selectedValue = it
+        }
     )
     PaddingItemSeparator()
     InputValueSettingItem(
@@ -150,7 +188,9 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
         icon = R.drawable.ic_download_location,
         title = "Downloaded file location",
         subtitle = "/Storage/Emulated/0/Downloads"
-    )
+    ) {
+        // Show choosing save location
+    }
 }
 
 @Composable
@@ -158,9 +198,14 @@ private fun ClickSettingItem(
     modifier: Modifier = Modifier,
     icon: Int,
     title: String,
-    subtitle: String?
+    subtitle: String?,
+    onClick: EmptyDataCallback,
 ) {
-    SettingItem(modifier = modifier, icon = icon, title = title) {
+    SettingItem(
+        modifier = modifier.noRippleClickable { onClick.invoke() },
+        icon = icon,
+        title = title
+    ) {
         subtitle?.let {
             Text(text = it, color = Color(0xFF838383))
         }
@@ -187,13 +232,16 @@ private fun SelectionSettingItem(
     title: String,
     selectedValue: String,
     values: List<String>,
+    onValueChange: SingleDataCallback<String>,
 ) {
     SettingItem(modifier = modifier, icon = icon, title = title) {
         Spacer(modifier = Modifier.height(4.dp))
+        var isSelectionShown by remember { mutableStateOf(false) }
         Row(
             modifier = Modifier
                 .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(8.dp))
-                .padding(8.dp),
+                .padding(8.dp)
+                .noRippleClickable { isSelectionShown = true },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = selectedValue, modifier = Modifier.padding(horizontal = 16.dp))
@@ -203,6 +251,17 @@ private fun SelectionSettingItem(
                 modifier = Modifier.size(16.dp),
                 contentDescription = null,
             )
+            if (isSelectionShown) {
+                ValueSelectionDialog(
+                    text = "Select maximum concurrent downloads",
+                    selectedValue = selectedValue,
+                    values = values,
+                    onValueChange = onValueChange,
+                    onDismiss = {
+                        isSelectionShown = false
+                    },
+                )
+            }
         }
     }
 }
@@ -220,16 +279,36 @@ private fun InputValueSettingItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            var rememberValue by remember { mutableStateOf("") }
+            val focusManager = LocalFocusManager.current
             BasicTextField(
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    println("done")
+                    focusManager.clearFocus()
+                }),
+                singleLine = true,
                 decorationBox = { innerTextField ->
-                    Text(
-                        text = "Not set", color = Color(0xFF838383),
-                        textAlign = TextAlign.Center,
-                    )
+                    if (rememberValue.isEmpty()) {
+                        Text(
+                            text = "Not set", color = Color(0xFF838383),
+                            style = TextStyle(
+                                fontSize = 16.sp
+                            )
+                        )
+                    }
                     innerTextField()
                 },
-                value = "",
-                onValueChange = onValueChange,
+                value = rememberValue,
+                onValueChange = {
+                    println("value: $it")
+                    if (it == "" || (it.length <= 10 && it.isInt() && it.toInt() > 0)) {
+                        rememberValue = it
+                        onValueChange.invoke(rememberValue)
+                    }
+                },
                 modifier = Modifier
                     .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(4.dp))
                     .padding(4.dp)
