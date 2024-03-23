@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.ui.components.TopBanner
 import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDialog
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
@@ -64,6 +65,7 @@ fun SettingsScreen(
             .fillMaxSize()
             .safeContentPadding()
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         TopBar(onBack = onBack)
         Spacer(modifier = Modifier.height(16.dp))
         GeneralSettings()
@@ -75,30 +77,19 @@ fun SettingsScreen(
 private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBack) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
         }
         Spacer(modifier = Modifier.weight(1f))
-        Image(
-            painter = painterResource(id = R.drawable.ic_settings),
-            contentDescription = null,
-            modifier = Modifier.size(36.dp)
+        TopBanner(
+            modifier = modifier,
+            icon = R.drawable.ic_settings,
+            title = R.string.txt_settings,
+            subtitle = R.string.txt_sub_modify_your_preferences,
         )
-        Spacer(modifier = Modifier.size(8.dp))
-        Column {
-            Text(
-                text = stringResource(R.string.txt_settings),
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            )
-            Text(
-                text = stringResource(R.string.txt_sub_modify_your_preferences),
-                color = Color(0xFF838383)
-            )
-        }
         Spacer(modifier = Modifier.weight(1f))
     }
 }

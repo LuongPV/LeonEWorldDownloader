@@ -24,4 +24,6 @@
     <string name="txt_sub_menu_about">More details on the application info</string>
     <string name="txt_version">Version: %s</string>
     <string name="txt_dlg_close">Close</string>
+    <string name="txt_downloads">Downloads</string>
+    <string name="txt_sub_downloads">All your downloads by filters</string>
 </resources>
