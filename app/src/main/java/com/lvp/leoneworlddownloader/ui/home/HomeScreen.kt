@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
-import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import kotlinx.coroutines.launch
 
@@ -72,11 +71,9 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
-    LeonEWorldDownloaderTheme {
-        HomeScreen(
-            viewModel = hiltViewModel(),
-            onNavigateFilter = {},
-            onNavigateSettings = {},
-            onNavigateAbout = {})
-    }
+    HomeScreen(
+        viewModel = hiltViewModel(),
+        onNavigateFilter = {},
+        onNavigateSettings = {},
+        onNavigateAbout = {})
 }

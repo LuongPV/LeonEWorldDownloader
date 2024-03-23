@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDialog
-import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
@@ -93,7 +92,10 @@ private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
                 text = stringResource(R.string.txt_settings),
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
             )
-            Text(text = stringResource(R.string.txt_sub_modify_your_preferences), color = Color(0xFF838383))
+            Text(
+                text = stringResource(R.string.txt_sub_modify_your_preferences),
+                color = Color(0xFF838383)
+            )
         }
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -401,7 +403,5 @@ private fun ItemSeparator(modifier: Modifier = Modifier) = Box(
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    LeonEWorldDownloaderTheme {
-        SettingsScreen(modifier = Modifier.background(Color.White), onBack = {})
-    }
+    SettingsScreen(modifier = Modifier.background(Color.White), onBack = {})
 }

@@ -1,10 +1,11 @@
 package com.lvp.leoneworlddownloader.ui.components
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,6 +33,10 @@ fun LEWDNavigationDrawer(
                 )
             }
         },
-        content = content
+        content = {
+            Box(modifier = Modifier.safeContentPadding()) {
+                content.invoke()
+            }
+        }
     )
 }

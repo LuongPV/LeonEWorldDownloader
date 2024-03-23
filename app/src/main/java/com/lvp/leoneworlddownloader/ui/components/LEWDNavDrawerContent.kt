@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
-import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
@@ -183,10 +182,8 @@ private fun Body(
 @Preview
 @Composable
 private fun LEWDNavDrawerContentPreview() {
-    LeonEWorldDownloaderTheme {
-        LEWDNavDrawerContent(
-            modifier = Modifier.background(Color.White),
-            onFilterClicked = {}, onSettingsClicked = {}, onAboutClicked = {},
-        )
-    }
+    LEWDNavDrawerContent(
+        modifier = Modifier.background(Color.White),
+        onFilterClicked = {}, onSettingsClicked = {}, onAboutClicked = {},
+    )
 }

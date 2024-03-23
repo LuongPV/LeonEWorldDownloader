@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import com.lvp.leoneworlddownloader.ui.navigation.LEWDNavHost
-import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,15 +20,12 @@ class MainActivity : ComponentActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
 
         setContent {
-            LeonEWorldDownloaderTheme(
-                darkTheme = false,
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LEWDNavHost()
-                }
+                LEWDNavHost()
             }
         }
     }

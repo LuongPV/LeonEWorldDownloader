@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.ui.components.GifImage
-import com.lvp.leoneworlddownloader.ui.theme.LeonEWorldDownloaderTheme
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import kotlinx.coroutines.delay
 
@@ -112,7 +111,5 @@ private const val DurationNavigateHome = 4000L
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenNoAnimationPreview() {
-    LeonEWorldDownloaderTheme {
-        SplashScreen(onSplashFinished = {})
-    }
+    SplashScreen(onSplashFinished = {})
 }
