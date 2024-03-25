@@ -1,5 +1,6 @@
 package com.lvp.leoneworlddownloader.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.DrawerState
@@ -9,6 +10,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 
@@ -26,7 +28,7 @@ fun LEWDNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
                 LEWDNavDrawerContent(
-                    modifier = modifier,
+                    modifier = modifier.background(Color(0xFFF0F0F0)),
                     onFilterClicked = onFilterClicked,
                     onSettingsClicked = onSettingsClicked,
                     onAboutClicked = onAboutClicked,

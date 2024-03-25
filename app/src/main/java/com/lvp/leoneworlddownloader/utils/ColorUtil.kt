@@ -12,6 +12,6 @@ fun getDownloadStatusColor(downloadStatus: DownloadStatus): Color {
         DownloadStatus.DOWNLOADED -> 0xFF073801
         DownloadStatus.PAUSED -> 0xFFFFD350
         DownloadStatus.STOPPED -> 0xFF202020
-        DownloadStatus.ERROR -> 0xFF8A1616
+        DownloadStatus.ERROR -> 0xFFD63030
     })
 }

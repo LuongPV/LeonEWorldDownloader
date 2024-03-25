@@ -183,7 +183,7 @@ private fun Body(
 @Composable
 private fun LEWDNavDrawerContentPreview() {
     LEWDNavDrawerContent(
-        modifier = Modifier.background(Color.White),
+        modifier = Modifier.background(Color(0xFFF0F0F0)),
         onFilterClicked = {}, onSettingsClicked = {}, onAboutClicked = {},
     )
 }
