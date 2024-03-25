@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,11 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.resources.drawableResourceSortOrder
+import com.lvp.leoneworlddownloader.resources.stringResourceDownloadSortType
+import com.lvp.leoneworlddownloader.resources.stringResourceSortOrder
 import com.lvp.leoneworlddownloader.ui.components.DownloadItem
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
@@ -95,7 +101,44 @@ private fun HomeContent(modifier: Modifier = Modifier, viewModel: HomeViewModel)
             viewModel.openDrawer()
         }
         Spacer(modifier = Modifier.height(16.dp))
+        HomeDownloadSorter(viewModel)
         HomeDownloadList(viewModel)
+    }
+}
+
+@Composable
+fun HomeDownloadSorter(viewModel: HomeViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Row(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(stringResource(R.string.txt_sort_by))
+        Spacer(Modifier.size(4.dp))
+        val modifierBg = Modifier
+            .background(Color(0xFFE0E0E0), RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+        Text(
+            text = stringResourceDownloadSortType(uiState.downloadSortType),
+            modifier = modifierBg
+        )
+        Spacer(Modifier.size(32.dp))
+        Text(stringResource(R.string.txt_sort_order))
+        Spacer(Modifier.size(8.dp))
+        Row(
+            modifier = modifierBg,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResourceSortOrder(uiState.sortOrder),
+            )
+            Spacer(modifier = Modifier.size(4.dp))
+            Image(
+                modifier = Modifier.size(18.dp),
+                painter = painterResource(drawableResourceSortOrder(uiState.sortOrder)),
+                contentDescription = null
+            )
+        }
     }
 }
 
