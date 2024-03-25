@@ -3,6 +3,7 @@ package com.lvp.leoneworlddownloader.data.models
 import java.time.LocalDateTime
 
 data class DownloadInfo(
+    val id: String,
     val fileName: String,
     val fileType: FileType,
     val fileSize: Long,

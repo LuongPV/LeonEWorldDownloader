@@ -1,6 +1,7 @@
 package com.lvp.leoneworlddownloader.ui.home
 
 import androidx.lifecycle.ViewModel
+import com.lvp.leoneworlddownloader.data.models.DownloadAction
 import com.lvp.leoneworlddownloader.data.models.DownloadSortType
 import com.lvp.leoneworlddownloader.data.models.SortOrder
 import com.lvp.leoneworlddownloader.data.repositories.DownloadRepository
@@ -27,6 +28,10 @@ class HomeViewModel @Inject constructor(
 
     fun resetOpenDrawerAction() {
         _drawerShouldBeOpened.value = false
+    }
+
+    fun processDownloadAction(id: String, downloadAction: DownloadAction) {
+
     }
 }
 

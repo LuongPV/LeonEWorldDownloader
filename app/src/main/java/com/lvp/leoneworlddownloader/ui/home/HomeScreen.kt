@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.data.models.DownloadAction
+import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.resources.drawableResourceSortOrder
 import com.lvp.leoneworlddownloader.resources.stringResourceDownloadSortType
 import com.lvp.leoneworlddownloader.resources.stringResourceSortOrder
@@ -148,10 +150,26 @@ fun HomeDownloadList(viewModel: HomeViewModel) {
     LazyColumn(modifier = Modifier.padding(16.dp),
         content = {
             items(downloads.size) {
-                DownloadItem(downloadInfo = downloads[it])
+                DownloadItem(downloadInfo = downloads[it]) { downloadInfo, downloadAction ->
+                    processDownloadAction(viewModel, downloadInfo, downloadAction)
+                }
                 Spacer(modifier = Modifier.size(16.dp))
             }
         })
+}
+
+private fun processDownloadAction(
+    viewModel: HomeViewModel,
+    downloadInfo: DownloadInfo,
+    downloadAction: DownloadAction,
+) {
+    if (downloadAction == DownloadAction.REMOVE) {
+        // Show confirmation on removing the item
+
+    } else {
+        // Pass VM for processing
+        viewModel.processDownloadAction(downloadInfo.id, downloadAction)
+    }
 }
 
 @Composable
