@@ -13,7 +13,6 @@ fun stringResourceDownloadStatus(downloadStatus: DownloadStatus): String {
         DownloadStatus.QUEUED -> R.string.txt_download_status_queued
         DownloadStatus.DOWNLOADING -> R.string.txt_download_status_downloading
         DownloadStatus.DOWNLOADED -> R.string.txt_download_status_downloaded
-        DownloadStatus.PAUSED -> R.string.txt_download_status_paused
         DownloadStatus.STOPPED -> R.string.txt_download_status_stopped
         DownloadStatus.ERROR -> R.string.txt_download_status_error
     })

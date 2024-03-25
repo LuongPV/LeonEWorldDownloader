@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -17,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +31,8 @@ import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.data.models.DownloadStatus
 import com.lvp.leoneworlddownloader.data.models.FileType
+import com.lvp.leoneworlddownloader.data.models.TextTintIcon
+import com.lvp.leoneworlddownloader.resources.drawableResourceTintActions
 import com.lvp.leoneworlddownloader.resources.stringResourceDownloadStatus
 import com.lvp.leoneworlddownloader.utils.getDownloadStatusColor
 import com.lvp.leoneworlddownloader.utils.getHumanReadableFileSize
@@ -70,18 +76,57 @@ fun DownloadItem(
                 trackColor = Color(0xFFCECECE),
                 color = getDownloadStatusColor(downloadStatus = downloadInfo.downloadStatus),
                 progress = (downloadInfo.bytesDownloaded / downloadInfo.fileSize.toDouble()).toFloat(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp),
             )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                text = stringResourceDownloadStatus(downloadInfo.downloadStatus),
-                color = getDownloadStatusColor(downloadInfo.downloadStatus)
-            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResourceDownloadStatus(downloadInfo.downloadStatus),
+                    color = getDownloadStatusColor(downloadInfo.downloadStatus),
+                    modifier = Modifier.weight(1f)
+                )
+                DownloadActionSection(actionList = drawableResourceTintActions(downloadInfo.downloadStatus))
+            }
         }
 
     }
 }
 
+@Composable
+private fun DownloadActionSection(modifier: Modifier = Modifier, actionList: List<TextTintIcon>) {
+    LazyRow(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        this.items(actionList.size) {
+            DownloadActionButton(modifier = modifier, icon = actionList[it])
+            if (it < actionList.lastIndex) {
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun DownloadActionButton(modifier: Modifier = Modifier, icon: TextTintIcon) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .background(Color(icon.tintColor), RoundedCornerShape(12.dp))
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+    ) {
+        Image(
+            painter = painterResource(id = icon.icon), contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.White),
+            modifier = modifier.size(14.dp),
+        )
+        Spacer(modifier = modifier.size(4.dp))
+        Text(text = stringResource(id = icon.label), color = Color.White, fontSize = 14.sp)
+    }
+}
 
 @Composable
 fun getIconByType(fileType: FileType): Int {

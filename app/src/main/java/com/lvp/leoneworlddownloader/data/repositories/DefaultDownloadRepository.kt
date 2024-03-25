@@ -49,8 +49,8 @@ class DefaultDownloadRepository @Inject constructor() : DownloadRepository {
                 "App.apk",
                 FileType.APPLICATION,
                 31000000L,
-                10000000L,
-                DownloadStatus.PAUSED,
+                31000000L,
+                DownloadStatus.DOWNLOADED,
                 LocalDateTime.now(),
             ),
             DownloadInfo(
@@ -81,8 +81,8 @@ class DefaultDownloadRepository @Inject constructor() : DownloadRepository {
                 "Image 2.jpg",
                 FileType.IMAGE,
                 670000L,
-                350000L,
-                DownloadStatus.PAUSED,
+                0L,
+                DownloadStatus.QUEUED,
                 LocalDateTime.now(),
             ),
         )
