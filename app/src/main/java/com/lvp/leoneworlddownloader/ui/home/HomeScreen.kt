@@ -2,6 +2,7 @@ package com.lvp.leoneworlddownloader.ui.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,12 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.ui.components.DownloadItem
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
@@ -83,6 +86,7 @@ private fun HomeContent(modifier: Modifier = Modifier, viewModel: HomeViewModel)
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(Color(0xFFF0F0F0))
             .safeContentPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -91,16 +95,20 @@ private fun HomeContent(modifier: Modifier = Modifier, viewModel: HomeViewModel)
             viewModel.openDrawer()
         }
         Spacer(modifier = Modifier.height(16.dp))
-        HomeDownloadList()
+        HomeDownloadList(viewModel)
     }
 }
 
 @Composable
-fun HomeDownloadList() {
-
-    LazyColumn(content = {
-        items()
-    })
+fun HomeDownloadList(viewModel: HomeViewModel) {
+    val downloads = viewModel.getDownloads()
+    LazyColumn(modifier = Modifier.padding(16.dp),
+        content = {
+            items(downloads.size) {
+                DownloadItem(downloadInfo = downloads[it])
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+        })
 }
 
 @Composable
@@ -110,9 +118,11 @@ private fun TopBar(modifier: Modifier = Modifier, onMenuClicked: EmptyDataCallba
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onMenuClicked, modifier = Modifier
-            .size(48.dp)
-            .padding(12.dp)) {
+        IconButton(
+            onClick = onMenuClicked, modifier = Modifier
+                .size(48.dp)
+                .padding(12.dp)
+        ) {
             Image(painter = painterResource(id = R.drawable.ic_menu), contentDescription = null)
         }
         Spacer(modifier = Modifier.weight(1f))

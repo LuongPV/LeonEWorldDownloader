@@ -1,9 +1,10 @@
 package com.lvp.leoneworlddownloader.data.models
 
 enum class DownloadStatus {
-    IN_QUEUE,
+    QUEUED,
     DOWNLOADING,
-    PAUSE,
+    DOWNLOADED,
+    PAUSED,
     STOPPED,
     ERROR,
 }
