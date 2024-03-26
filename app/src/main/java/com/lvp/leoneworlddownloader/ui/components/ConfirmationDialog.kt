@@ -17,12 +17,16 @@ import com.lvp.leoneworlddownloader.utils.ScopedComposableContent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmationDialog(
+    isVisible: Boolean,
     modifier: Modifier = Modifier,
     text: String,
     onDismiss: EmptyDataCallback,
     content: ComposableContent,
     optionalButtonContent: ScopedComposableContent<RowScope>,
 ) {
+    if (!isVisible) {
+        return
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,

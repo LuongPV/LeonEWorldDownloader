@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lvp.leoneworlddownloader.ui.create.NewDownloadScreen
+import com.lvp.leoneworlddownloader.ui.create.RouteNewDownload
 import com.lvp.leoneworlddownloader.ui.downloaddetails.DownloadDetailsScreen
 import com.lvp.leoneworlddownloader.ui.downloaddetails.FormattedRouteDownloadDetails
 import com.lvp.leoneworlddownloader.ui.downloaddetails.RouteDownloadDetails
@@ -45,6 +47,9 @@ fun LEWDNavHost(
                 onDownloadDetails = {
                     navController.navigate(String.format(FormattedRouteDownloadDetails, it))
                 },
+                onAddNewDownload = {
+                    navController.navigate(RouteNewDownload)
+                }
             )
         }
         composable(RouteSettings) {
@@ -59,6 +64,11 @@ fun LEWDNavHost(
                     navController.popBackStack()
                 }
             )
+        }
+        composable(RouteNewDownload) {
+            NewDownloadScreen(viewModel = hiltViewModel()) {
+                navController.popBackStack()
+            }
         }
     }
 }

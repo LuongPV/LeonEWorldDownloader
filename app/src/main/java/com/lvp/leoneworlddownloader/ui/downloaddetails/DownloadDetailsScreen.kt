@@ -45,6 +45,7 @@ import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.resources.drawableResourceBackgroundFileType
 import com.lvp.leoneworlddownloader.resources.stringResourceDownloadStatus
 import com.lvp.leoneworlddownloader.resources.stringResourceFileType
+import com.lvp.leoneworlddownloader.ui.components.BackTopBar
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.getDownloadStatusColor
@@ -80,7 +81,12 @@ fun DownloadDetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            TopBar(onBack = onBack)
+            BackTopBar(
+                icon = R.drawable.ic_information,
+                title = R.string.txt_download_details,
+                subtitle = R.string.txt_sub_download_details,
+                onBack = onBack,
+            )
             Spacer(modifier = Modifier.height(32.dp))
             Box(
                 contentAlignment = Alignment.Center,
@@ -151,27 +157,6 @@ private fun createStringMap(downloadInfo: DownloadInfo): Map<String, String> {
         Pair("Save location:", downloadInfo.saveLocation),
         Pair("Date added:", downloadInfo.dateAdded.toString()),
     )
-}
-
-@Composable
-private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        TopBanner(
-            modifier = modifier,
-            icon = R.drawable.ic_information,
-            title = R.string.txt_download_details,
-            subtitle = R.string.txt_sub_download_details,
-        )
-        Spacer(modifier = Modifier.weight(1f))
-    }
 }
 
 @Preview

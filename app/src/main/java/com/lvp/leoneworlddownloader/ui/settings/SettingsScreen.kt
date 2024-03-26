@@ -16,13 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -34,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -44,7 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
-import com.lvp.leoneworlddownloader.ui.components.TopBanner
+import com.lvp.leoneworlddownloader.ui.components.BackTopBar
+import com.lvp.leoneworlddownloader.ui.components.InputTextField
 import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDialog
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
@@ -66,31 +59,15 @@ fun SettingsScreen(
             .safeContentPadding()
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        TopBar(onBack = onBack)
-        Spacer(modifier = Modifier.height(16.dp))
-        GeneralSettings()
-        DownloadSettings()
-    }
-}
-
-@Composable
-private fun TopBar(modifier: Modifier = Modifier, onBack: EmptyDataCallback) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        TopBanner(
-            modifier = modifier,
+        BackTopBar(
             icon = R.drawable.ic_settings,
             title = R.string.txt_settings,
             subtitle = R.string.txt_sub_modify_your_preferences,
+            onBack = onBack,
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
+        GeneralSettings()
+        DownloadSettings()
     }
 }
 
@@ -318,39 +295,13 @@ private fun InputValueSettingItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            var rememberValue by remember { mutableStateOf("") }
-            val focusManager = LocalFocusManager.current
-            BasicTextField(
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    println("done")
-                    focusManager.clearFocus()
-                }),
-                singleLine = true,
-                decorationBox = { innerTextField ->
-                    if (rememberValue.isEmpty()) {
-                        Text(
-                            text = "Not set", color = Color(0xFF838383),
-                            style = TextStyle(
-                                fontSize = 16.sp
-                            )
-                        )
-                    }
-                    innerTextField()
+            InputTextField(
+                textHint = R.string.txt_hint_not_set_value,
+                keyboardType = KeyboardType.Number,
+                onValueTyped = {
+                    it == "" || (it.length <= 10 && it.isInt() && it.toInt() > 0)
                 },
-                value = rememberValue,
-                onValueChange = {
-                    println("value: $it")
-                    if (it == "" || (it.length <= 10 && it.isInt() && it.toInt() > 0)) {
-                        rememberValue = it
-                        onValueChange.invoke(rememberValue)
-                    }
-                },
-                modifier = Modifier
-                    .border(1.dp, Color(0xFFCFCFCF), RoundedCornerShape(4.dp))
-                    .padding(4.dp)
+                onAfterValueChange = onValueChange,
             )
             unitContent.invoke()
         }

@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,11 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,8 +48,11 @@ import com.lvp.leoneworlddownloader.ui.components.ConfirmationDialog
 import com.lvp.leoneworlddownloader.ui.components.DownloadItem
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
+import com.lvp.leoneworlddownloader.utils.DoubleDataCallback
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
+import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
+import com.lvp.leoneworlddownloader.utils.SingleDataReturnCallback
 import kotlinx.coroutines.launch
 
 const val RouteHome = "Home"
@@ -57,6 +65,7 @@ fun HomeScreen(
     onNavigateSettings: EmptyDataCallback,
     onNavigateAbout: EmptyDataCallback,
     onDownloadDetails: SingleDataCallback<String>,
+    onAddNewDownload: EmptyDataCallback,
 ) {
     Column(
         modifier = modifier,
@@ -88,7 +97,34 @@ fun HomeScreen(
             onSettingsClicked = onNavigateSettings,
             onAboutClicked = onNavigateAbout,
         ) {
-            HomeContent(viewModel = viewModel, onDownloadItemClick = onDownloadDetails)
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            HomeContent(
+                uiState = uiState,
+                onGetDownload = {
+                    viewModel.getDownload(it)!!
+                },
+                onRemoveDownload = {
+                    viewModel.removeDownload(it)
+                    viewModel.confirmRemoveDownload(null)
+                },
+                onDismissRemoveDownload = {
+                    viewModel.confirmRemoveDownload(null)
+                },
+                onDownloadItemClick = onDownloadDetails,
+                onGetDownloads = {
+                    viewModel.getDownloads()
+                },
+                onOpenDrawer = {
+                    viewModel.openDrawer()
+                },
+                onConfirmRemoveDownload = {
+                    viewModel.confirmRemoveDownload(it)
+                },
+                onProcessDownloadAction = { downloadId, downloadAction ->
+                    viewModel.processDownloadAction(downloadId, downloadAction)
+                },
+                onAddNewDownload = onAddNewDownload,
+            )
         }
     }
 }
@@ -96,49 +132,67 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
+    uiState: HomeUiState,
+    onGetDownload: SingleDataConverterCallback<String, DownloadInfo>,
+    onRemoveDownload: SingleDataCallback<String>,
+    onDismissRemoveDownload: SingleDataCallback<String>,
     onDownloadItemClick: SingleDataCallback<String>,
+    onGetDownloads: SingleDataReturnCallback<List<DownloadInfo>>,
+    onOpenDrawer: EmptyDataCallback,
+    onConfirmRemoveDownload: SingleDataCallback<String>,
+    onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
+    onAddNewDownload: EmptyDataCallback,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.confirmRemoveDownloadId != null) {
-        val downloadInfo = viewModel.getDownload(uiState.confirmRemoveDownloadId!!)!!
+        val downloadInfo = onGetDownload.invoke(uiState.confirmRemoveDownloadId)
         ConfirmationDialog(
+            isVisible = true,
             text = "Are you sure you want to remove this download?\n${downloadInfo.fileName}",
             content = {},
             optionalButtonContent = {
                 Spacer(modifier = Modifier.size(8.dp))
                 TextButton(onClick = {
-                    viewModel.removeDownload(downloadInfo.id)
-                    viewModel.confirmRemoveDownload(null)
+                    onRemoveDownload.invoke(downloadInfo.id)
                 }) {
                     Text(text = stringResource(R.string.txt_dlg_remove_download))
                 }
             },
             onDismiss = {
-                viewModel.confirmRemoveDownload(null)
+                onDismissRemoveDownload.invoke(downloadInfo.id)
             },
         )
     }
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0))
             .safeContentPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.BottomEnd,
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        TopBar(modifier) {
-            viewModel.openDrawer()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            TopBar(modifier) {
+                onOpenDrawer.invoke()
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            HomeDownloadSorter(uiState)
+            HomeDownloadList(
+                onConfirmRemoveDownload = onConfirmRemoveDownload,
+                onProcessDownloadAction = onProcessDownloadAction,
+                onGetDownloads = onGetDownloads,
+                onDownloadItemClick = onDownloadItemClick,
+            )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        HomeDownloadSorter(viewModel)
-        HomeDownloadList(viewModel, onDownloadItemClick)
+        FloatingActionButton(modifier = Modifier.padding(32.dp), onClick = onAddNewDownload) {
+            Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+        }
     }
 }
 
 @Composable
-fun HomeDownloadSorter(viewModel: HomeViewModel) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+fun HomeDownloadSorter(uiState: HomeUiState) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -173,15 +227,25 @@ fun HomeDownloadSorter(viewModel: HomeViewModel) {
 }
 
 @Composable
-fun HomeDownloadList(viewModel: HomeViewModel, onDownloadItemClick: SingleDataCallback<String>) {
-    val downloads = viewModel.getDownloads()
+fun HomeDownloadList(
+    onGetDownloads: SingleDataReturnCallback<List<DownloadInfo>>,
+    onDownloadItemClick: SingleDataCallback<String>,
+    onConfirmRemoveDownload: SingleDataCallback<String>,
+    onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
+) {
+    val downloads = onGetDownloads.invoke()
     LazyColumn(modifier = Modifier.padding(16.dp),
         content = {
             items(downloads.size) {
                 DownloadItem(
                     downloadInfo = downloads[it],
                     onActionButtonClicked = { downloadInfo, downloadAction ->
-                        processDownloadAction(viewModel, downloadInfo, downloadAction)
+                        processDownloadAction(
+                            onConfirmRemoveDownload,
+                            onProcessDownloadAction,
+                            downloadInfo,
+                            downloadAction,
+                        )
                     },
                     onDownloadItemClick = onDownloadItemClick,
                 )
@@ -191,16 +255,17 @@ fun HomeDownloadList(viewModel: HomeViewModel, onDownloadItemClick: SingleDataCa
 }
 
 private fun processDownloadAction(
-    viewModel: HomeViewModel,
+    onConfirmRemoveDownload: SingleDataCallback<String>,
+    onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
     downloadInfo: DownloadInfo,
     downloadAction: DownloadAction,
 ) {
     if (downloadAction == DownloadAction.REMOVE) {
         // Show confirmation on removing the item
-        viewModel.confirmRemoveDownload(downloadInfo.id)
+        onConfirmRemoveDownload.invoke(downloadInfo.id)
     } else {
         // Pass VM for processing
-        viewModel.processDownloadAction(downloadInfo.id, downloadAction)
+        onProcessDownloadAction.invoke(downloadInfo.id, downloadAction)
     }
 }
 
@@ -238,5 +303,6 @@ private fun HomeScreenPreview() {
         onNavigateSettings = {},
         onNavigateAbout = {},
         onDownloadDetails = {},
+        onAddNewDownload = {},
     )
 }

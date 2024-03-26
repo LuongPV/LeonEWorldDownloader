@@ -51,4 +51,8 @@
     <string name="txt_file_type_compress">Compress</string>
     <string name="txt_file_type_other">Other</string>
     <string name="txt_dlg_remove_download">Yes remove it</string>
+    <string name="txt_add_new_download">Settings</string>
+    <string name="txt_sub_add_new_download">Modify your preferences</string>
+    <string name="txt_hint_not_set_value">Not set</string>
+    <string name="txt_hint_paste_url">Paste url here</string>
 </resources>
