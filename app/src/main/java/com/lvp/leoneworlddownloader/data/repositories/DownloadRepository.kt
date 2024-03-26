@@ -6,4 +6,6 @@ interface DownloadRepository {
 
     fun getDownloads(): List<DownloadInfo>
 
+    fun getDownload(downloadId: String): DownloadInfo?
+
 }

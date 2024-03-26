@@ -5,32 +5,53 @@ import androidx.compose.ui.res.stringResource
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.data.models.DownloadSortType
 import com.lvp.leoneworlddownloader.data.models.DownloadStatus
+import com.lvp.leoneworlddownloader.data.models.FileType
 import com.lvp.leoneworlddownloader.data.models.SortOrder
 
 @Composable
 fun stringResourceDownloadStatus(downloadStatus: DownloadStatus): String {
-    return stringResource(when (downloadStatus) {
-        DownloadStatus.QUEUED -> R.string.txt_download_status_queued
-        DownloadStatus.DOWNLOADING -> R.string.txt_download_status_downloading
-        DownloadStatus.DOWNLOADED -> R.string.txt_download_status_downloaded
-        DownloadStatus.STOPPED -> R.string.txt_download_status_stopped
-        DownloadStatus.ERROR -> R.string.txt_download_status_error
-    })
+    return stringResource(
+        when (downloadStatus) {
+            DownloadStatus.QUEUED -> R.string.txt_download_status_queued
+            DownloadStatus.DOWNLOADING -> R.string.txt_download_status_downloading
+            DownloadStatus.DOWNLOADED -> R.string.txt_download_status_downloaded
+            DownloadStatus.STOPPED -> R.string.txt_download_status_stopped
+            DownloadStatus.ERROR -> R.string.txt_download_status_error
+        }
+    )
 }
 
 @Composable
 fun stringResourceDownloadSortType(downloadSortType: DownloadSortType): String {
-    return stringResource(when (downloadSortType) {
-        DownloadSortType.SORTED_BY_NAME -> R.string.txt_sort_type_name
-        DownloadSortType.SORTED_BY_DATE -> R.string.txt_sort_type_date
-        DownloadSortType.SORTED_BY_PROGRESS -> R.string.txt_sort_type_progress
-    })
+    return stringResource(
+        when (downloadSortType) {
+            DownloadSortType.SORTED_BY_NAME -> R.string.txt_sort_type_name
+            DownloadSortType.SORTED_BY_DATE -> R.string.txt_sort_type_date
+            DownloadSortType.SORTED_BY_PROGRESS -> R.string.txt_sort_type_progress
+        }
+    )
 }
 
 @Composable
 fun stringResourceSortOrder(sortOrder: SortOrder): String {
-    return stringResource(when (sortOrder) {
-        SortOrder.ASC -> R.string.txt_sort_order_asc
-        SortOrder.DESC -> R.string.txt_sort_order_desc
-    })
+    return stringResource(
+        when (sortOrder) {
+            SortOrder.ASC -> R.string.txt_sort_order_asc
+            SortOrder.DESC -> R.string.txt_sort_order_desc
+        }
+    )
+}
+
+@Composable
+fun stringResourceFileType(fileType: FileType): String {
+    return stringResource(
+        when (fileType) {
+            FileType.IMAGE -> R.string.txt_file_type_image
+            FileType.VIDEO -> R.string.txt_file_type_video
+            FileType.AUDIO -> R.string.txt_file_type_audio
+            FileType.COMPRESS -> R.string.txt_file_type_compress
+            FileType.APPLICATION -> R.string.txt_file_type_application
+            FileType.OTHER -> R.string.txt_file_type_other
+        }
+    )
 }

@@ -42,4 +42,12 @@
     <string name="txt_download_action_restart">Restart</string>
     <string name="txt_download_action_stop">Stop</string>
     <string name="txt_download_action_remove">Remove</string>
+    <string name="txt_download_details">Download Details</string>
+    <string name="txt_sub_download_details">More download information</string>
+    <string name="txt_file_type_image">Image</string>
+    <string name="txt_file_type_audio">Audio</string>
+    <string name="txt_file_type_video">Video</string>
+    <string name="txt_file_type_application">Application</string>
+    <string name="txt_file_type_compress">Compress</string>
+    <string name="txt_file_type_other">Other</string>
 </resources>

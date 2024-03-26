@@ -42,6 +42,7 @@ import com.lvp.leoneworlddownloader.ui.components.DownloadItem
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
+import com.lvp.leoneworlddownloader.utils.SingleDataCallback
 import kotlinx.coroutines.launch
 
 const val RouteHome = "Home"
@@ -53,6 +54,7 @@ fun HomeScreen(
     onNavigateFilter: EmptyDataCallback,
     onNavigateSettings: EmptyDataCallback,
     onNavigateAbout: EmptyDataCallback,
+    onDownloadDetails: SingleDataCallback<String>,
 ) {
     Column(
         modifier = modifier,
@@ -84,13 +86,17 @@ fun HomeScreen(
             onSettingsClicked = onNavigateSettings,
             onAboutClicked = onNavigateAbout,
         ) {
-            HomeContent(viewModel = viewModel)
+            HomeContent(viewModel = viewModel, onDownloadItemClick = onDownloadDetails)
         }
     }
 }
 
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier, viewModel: HomeViewModel) {
+private fun HomeContent(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
+    onDownloadItemClick: SingleDataCallback<String>,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -104,7 +110,7 @@ private fun HomeContent(modifier: Modifier = Modifier, viewModel: HomeViewModel)
         }
         Spacer(modifier = Modifier.height(16.dp))
         HomeDownloadSorter(viewModel)
-        HomeDownloadList(viewModel)
+        HomeDownloadList(viewModel, onDownloadItemClick)
     }
 }
 
@@ -145,14 +151,18 @@ fun HomeDownloadSorter(viewModel: HomeViewModel) {
 }
 
 @Composable
-fun HomeDownloadList(viewModel: HomeViewModel) {
+fun HomeDownloadList(viewModel: HomeViewModel, onDownloadItemClick: SingleDataCallback<String>) {
     val downloads = viewModel.getDownloads()
     LazyColumn(modifier = Modifier.padding(16.dp),
         content = {
             items(downloads.size) {
-                DownloadItem(downloadInfo = downloads[it]) { downloadInfo, downloadAction ->
-                    processDownloadAction(viewModel, downloadInfo, downloadAction)
-                }
+                DownloadItem(
+                    downloadInfo = downloads[it],
+                    onActionButtonClicked = { downloadInfo, downloadAction ->
+                        processDownloadAction(viewModel, downloadInfo, downloadAction)
+                    },
+                    onDownloadItemClick = onDownloadItemClick,
+                )
                 Spacer(modifier = Modifier.size(16.dp))
             }
         })
@@ -204,5 +214,7 @@ private fun HomeScreenPreview() {
         viewModel = hiltViewModel(),
         onNavigateFilter = {},
         onNavigateSettings = {},
-        onNavigateAbout = {})
+        onNavigateAbout = {},
+        onDownloadDetails = {},
+    )
 }

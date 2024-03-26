@@ -49,12 +49,16 @@ fun DownloadItem(
     modifier: Modifier = Modifier,
     downloadInfo: DownloadInfo,
     onActionButtonClicked: DoubleDataCallback<DownloadInfo, DownloadAction>,
+    onDownloadItemClick: SingleDataCallback<String>,
 ) {
     Row(
         modifier = modifier
             .background(Color.White, RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
+            .clickable {
+                onDownloadItemClick.invoke(downloadInfo.id)
+            },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painterResource(getIconByType(fileType = downloadInfo.fileType)),
@@ -172,14 +176,16 @@ private fun DownloadItemPreview() {
     DownloadItem(
         downloadInfo = DownloadInfo(
             id = "076cf1f7-095d-4e68-9a26-d29ba12c07ea",
+            url = "https://filedownload.com/file/image.jpg",
             fileName = "test file download.mp3",
             fileType = FileType.AUDIO,
             fileSize = 4100000,
             bytesDownloaded = 3500000,
             downloadStatus = DownloadStatus.DOWNLOADING,
+            saveLocation = "/Storage/Emulated/0/DCIM/Image.jpg",
             dateAdded = LocalDateTime.now(),
-        )
-    ) { _, _ ->
-        // No implementation
-    }
+        ),
+        onActionButtonClicked = { _, _ -> },
+        onDownloadItemClick = {}
+    )
 }
