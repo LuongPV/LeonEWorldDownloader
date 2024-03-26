@@ -25,7 +25,7 @@ fun ValueSelectionDialog(
     onValueChange: SingleDataCallback<String>,
     onDismiss: EmptyDataCallback,
 ) {
-    GeneralDialog(
+    InformationDialog(
         modifier = modifier,
         text = text,
         onDismiss = onDismiss

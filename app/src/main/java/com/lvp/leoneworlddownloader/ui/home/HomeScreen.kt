@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +39,7 @@ import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.resources.drawableResourceSortOrder
 import com.lvp.leoneworlddownloader.resources.stringResourceDownloadSortType
 import com.lvp.leoneworlddownloader.resources.stringResourceSortOrder
+import com.lvp.leoneworlddownloader.ui.components.ConfirmationDialog
 import com.lvp.leoneworlddownloader.ui.components.DownloadItem
 import com.lvp.leoneworlddownloader.ui.components.LEWDNavigationDrawer
 import com.lvp.leoneworlddownloader.ui.components.TopBanner
@@ -97,6 +99,26 @@ private fun HomeContent(
     viewModel: HomeViewModel,
     onDownloadItemClick: SingleDataCallback<String>,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    if (uiState.confirmRemoveDownloadId != null) {
+        val downloadInfo = viewModel.getDownload(uiState.confirmRemoveDownloadId!!)!!
+        ConfirmationDialog(
+            text = "Are you sure you want to remove this download?\n${downloadInfo.fileName}",
+            content = {},
+            optionalButtonContent = {
+                Spacer(modifier = Modifier.size(8.dp))
+                TextButton(onClick = {
+                    viewModel.removeDownload(downloadInfo.id)
+                    viewModel.confirmRemoveDownload(null)
+                }) {
+                    Text(text = stringResource(R.string.txt_dlg_remove_download))
+                }
+            },
+            onDismiss = {
+                viewModel.confirmRemoveDownload(null)
+            },
+        )
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -175,7 +197,7 @@ private fun processDownloadAction(
 ) {
     if (downloadAction == DownloadAction.REMOVE) {
         // Show confirmation on removing the item
-
+        viewModel.confirmRemoveDownload(downloadInfo.id)
     } else {
         // Pass VM for processing
         viewModel.processDownloadAction(downloadInfo.id, downloadAction)

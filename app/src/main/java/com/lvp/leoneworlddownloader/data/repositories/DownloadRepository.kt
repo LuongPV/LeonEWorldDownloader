@@ -8,4 +8,6 @@ interface DownloadRepository {
 
     fun getDownload(downloadId: String): DownloadInfo?
 
+    fun removeDownload(downloadId: String)
+
 }

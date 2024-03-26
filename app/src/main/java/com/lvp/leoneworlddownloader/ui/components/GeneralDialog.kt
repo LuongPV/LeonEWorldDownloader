@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.utils.ComposableContent
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
+import com.lvp.leoneworlddownloader.utils.ScopedComposableContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +33,8 @@ fun GeneralDialog(
     modifier: Modifier = Modifier,
     text: String,
     onDismiss: EmptyDataCallback,
-    content: ComposableContent,
+    mainContent: ComposableContent,
+    buttonContent: ScopedComposableContent<RowScope>,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -49,13 +52,10 @@ fun GeneralDialog(
                 )
             )
             Spacer(modifier = Modifier.size(8.dp))
-            content.invoke()
+            mainContent.invoke()
             Spacer(modifier = Modifier.size(8.dp))
             Row {
-                Box(Modifier.weight(1f))
-                TextButton(onClick = onDismiss) {
-                    Text(text = stringResource(R.string.txt_dlg_close))
-                }
+                buttonContent.invoke(this)
             }
         }
     }
@@ -64,7 +64,5 @@ fun GeneralDialog(
 @Preview
 @Composable
 private fun GeneralDialogPreview() {
-    GeneralDialog(Modifier, "Test dialog", {}) {
-
-    }
+    GeneralDialog(Modifier, "Test dialog", mainContent = {}, buttonContent = {}, onDismiss = {})
 }

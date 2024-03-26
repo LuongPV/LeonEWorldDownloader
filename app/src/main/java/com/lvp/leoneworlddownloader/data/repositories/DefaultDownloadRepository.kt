@@ -14,7 +14,7 @@ class DefaultDownloadRepository @Inject constructor(
 ) : DownloadRepository {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val cachedDownloads = listOf(
+    private val cachedDownloads = mutableListOf(
         DownloadInfo(
             idGenerator.generateString(),
             "https://filedownload.com/file/image.jpg",
@@ -124,6 +124,11 @@ class DefaultDownloadRepository @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getDownload(downloadId: String): DownloadInfo? {
         return getDownloads().find { it.id == downloadId }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun removeDownload(downloadId: String) {
+        cachedDownloads.removeIf { it.id == downloadId }
     }
 
 }
