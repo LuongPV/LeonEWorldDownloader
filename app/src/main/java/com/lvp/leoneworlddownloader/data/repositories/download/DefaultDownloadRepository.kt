@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.lvp.leoneworlddownloader.data.IdGenerator
 import com.lvp.leoneworlddownloader.data.db.daos.DownloadInfoDao
-import com.lvp.leoneworlddownloader.data.mappers.transform
+import com.lvp.leoneworlddownloader.data.mappers.DownloadInfoMapper
+import com.lvp.leoneworlddownloader.data.mappers.UrlResourceMapper
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
+import com.lvp.leoneworlddownloader.data.models.UrlResource
 import javax.inject.Inject
 
 class DefaultDownloadRepository @Inject constructor(
@@ -16,7 +18,7 @@ class DefaultDownloadRepository @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getDownloads(): List<DownloadInfo> {
         return downloadInfoDao.getDownloads().map {
-            transform(it)
+            DownloadInfoMapper.transform(it)
         }
     }
 
@@ -24,7 +26,7 @@ class DefaultDownloadRepository @Inject constructor(
     override suspend fun getDownload(downloadId: String): DownloadInfo? {
         val downloadInfoEntity = downloadInfoDao.getDownload(downloadId) ?: return null
         return with(downloadInfoEntity) {
-            transform(this)
+            DownloadInfoMapper.transform(this)
         }
     }
 
@@ -33,8 +35,10 @@ class DefaultDownloadRepository @Inject constructor(
         downloadInfoDao.removeDownload(downloadId)
     }
 
-    override suspend fun addDownload(url: String) {
-
+    override suspend fun addDownload(urlResource: UrlResource) {
+        downloadInfoDao.insertDownload(with(urlResource) {
+            UrlResourceMapper.transform(this, idGenerator.generateString())
+        })
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,6 +25,7 @@ class DownloadDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val downloadId: String = checkNotNull(savedStateHandle["downloadId"])
             val downloadInfo = downloadRepository.getDownload(downloadId)
+            delay(2000)
             _uiState.update {
                 it.copy(downloadInfo = downloadInfo)
             }

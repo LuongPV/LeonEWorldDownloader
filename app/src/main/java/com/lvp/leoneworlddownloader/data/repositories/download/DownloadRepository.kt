@@ -1,6 +1,7 @@
 package com.lvp.leoneworlddownloader.data.repositories.download
 
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
+import com.lvp.leoneworlddownloader.data.models.UrlResource
 
 interface DownloadRepository {
 
@@ -10,6 +11,6 @@ interface DownloadRepository {
 
     suspend fun removeDownload(downloadId: String)
 
-    suspend fun addDownload(url: String)
+    suspend fun addDownload(urlResource: UrlResource)
 
 }

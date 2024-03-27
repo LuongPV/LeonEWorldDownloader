@@ -73,7 +73,7 @@ class NewDownloadViewModel @Inject constructor(
 
     fun addDownload() {
         viewModelScope.launch {
-            downloadRepository.addDownload(_uiState.value.url)
+            downloadRepository.addDownload(_uiState.value.urlResource)
         }
     }
 }
