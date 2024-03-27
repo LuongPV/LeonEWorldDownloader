@@ -50,17 +50,6 @@ class DefaultDownloadRepository @Inject constructor(
         ),
         DownloadInfo(
             idGenerator.generateString(),
-            "https://filedownload.com/file/secret.zip",
-            "Secret.zip",
-            FileType.COMPRESS,
-            35000000L,
-            10000000L,
-            DownloadStatus.STOPPED,
-            "/Storage/Emulated/0/Secret.zip",
-            LocalDateTime.now(),
-        ),
-        DownloadInfo(
-            idGenerator.generateString(),
             "https://filedownload.com/file/download/app.apk",
             "App.apk",
             FileType.APPLICATION,

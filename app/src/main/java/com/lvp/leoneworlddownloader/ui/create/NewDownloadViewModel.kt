@@ -8,7 +8,6 @@ import com.lvp.leoneworlddownloader.data.repositories.url.UrlRepository
 import com.lvp.leoneworlddownloader.ui.components.LoadingState
 import com.lvp.leoneworlddownloader.utils.isUrlValid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -51,7 +50,6 @@ class NewDownloadViewModel @Inject constructor(
                 )
             }
             viewModelScope.launch {
-                delay(3000)
                 val urlResource = urlRepository.inspectUrl(url)
                 _uiState.update {
                     it.copy(

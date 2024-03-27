@@ -61,7 +61,6 @@ fun drawableResourceBackgroundFileType(fileType: FileType): Int {
         FileType.IMAGE -> R.drawable.bg_image
         FileType.VIDEO -> R.drawable.bg_video
         FileType.AUDIO -> R.drawable.bg_audio
-        FileType.COMPRESS -> R.drawable.bg_compress
         FileType.APPLICATION -> R.drawable.bg_application
         FileType.OTHER -> R.drawable.bg_other
     }

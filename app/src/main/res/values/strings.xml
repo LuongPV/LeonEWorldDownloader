@@ -48,7 +48,6 @@
     <string name="txt_file_type_audio">Audio</string>
     <string name="txt_file_type_video">Video</string>
     <string name="txt_file_type_application">Application</string>
-    <string name="txt_file_type_compress">Compress</string>
     <string name="txt_file_type_other">Other</string>
     <string name="txt_dlg_remove_download">Yes remove it</string>
     <string name="txt_add_new_download">Settings</string>

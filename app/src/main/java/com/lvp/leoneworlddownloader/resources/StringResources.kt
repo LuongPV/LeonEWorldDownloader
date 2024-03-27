@@ -49,7 +49,6 @@ fun stringResourceFileType(fileType: FileType): String {
             FileType.IMAGE -> R.string.txt_file_type_image
             FileType.VIDEO -> R.string.txt_file_type_video
             FileType.AUDIO -> R.string.txt_file_type_audio
-            FileType.COMPRESS -> R.string.txt_file_type_compress
             FileType.APPLICATION -> R.string.txt_file_type_application
             FileType.OTHER -> R.string.txt_file_type_other
         }

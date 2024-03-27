@@ -2,6 +2,8 @@ package com.lvp.leoneworlddownloader.di
 
 import com.lvp.leoneworlddownloader.data.IdGenerator
 import com.lvp.leoneworlddownloader.data.UUIDGenerator
+import com.lvp.leoneworlddownloader.data.apis.BrowsableApi
+import com.lvp.leoneworlddownloader.data.apis.OkHttpBrowsableApi
 import com.lvp.leoneworlddownloader.data.repositories.download.DefaultDownloadRepository
 import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
 import com.lvp.leoneworlddownloader.data.repositories.url.DefaultUrlRepository
@@ -27,5 +29,9 @@ abstract class GeneralModule {
     @Binds
     @Singleton
     abstract fun bindIdGenerator(implementation: UUIDGenerator): IdGenerator
+
+    @Binds
+    @Singleton
+    abstract fun bindBrowsableApi(implementation: OkHttpBrowsableApi): BrowsableApi
 
 }

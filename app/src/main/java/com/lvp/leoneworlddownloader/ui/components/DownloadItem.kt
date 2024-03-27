@@ -163,7 +163,6 @@ fun getIconByType(fileType: FileType): Int {
         FileType.IMAGE -> R.drawable.ic_file_type_image
         FileType.VIDEO -> R.drawable.ic_file_type_video
         FileType.AUDIO -> R.drawable.ic_file_type_audio
-        FileType.COMPRESS -> R.drawable.ic_file_type_compress
         FileType.APPLICATION -> R.drawable.ic_file_type_application
         FileType.OTHER -> R.drawable.ic_file_type_other
     }
