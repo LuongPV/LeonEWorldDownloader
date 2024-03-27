@@ -61,4 +61,5 @@
     <string name="txt_new_download_file_size">File size:</string>
     <string name="txt_new_download_save_location">Save location:</string>
     <string name="txt_dlg_invalid_url">You entered invalid URL, please check again</string>
+    <string name="txt_add_download">Add</string>
 </resources>

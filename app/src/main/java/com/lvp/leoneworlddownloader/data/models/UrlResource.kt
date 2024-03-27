@@ -5,7 +5,8 @@ data class UrlResource(
     val fileName: String,
     val fileType: FileType,
     val fileSize: Long,
-    val saveLocation: String
+    val saveLocation: String,
+    val isResolved: Boolean,
 ) {
     companion object {
         val Default = UrlResource(
@@ -14,6 +15,7 @@ data class UrlResource(
             fileType = FileType.OTHER,
             fileSize = 0,
             saveLocation = "",
+            isResolved = false,
         )
     }
 }

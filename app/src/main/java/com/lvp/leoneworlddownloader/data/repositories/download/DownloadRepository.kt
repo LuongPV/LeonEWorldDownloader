@@ -10,4 +10,6 @@ interface DownloadRepository {
 
     fun removeDownload(downloadId: String)
 
+    fun addDownload(url: String)
+
 }

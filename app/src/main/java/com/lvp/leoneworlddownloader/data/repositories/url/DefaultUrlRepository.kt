@@ -12,7 +12,8 @@ class DefaultUrlRepository @Inject constructor(): UrlRepository {
             fileName = "Test.mp3",
             fileType = FileType.AUDIO,
             fileSize = 3000000L,
-            saveLocation = "/Storage/Emulated/0/Test.mp3"
+            saveLocation = "/Storage/Emulated/0/Test.mp3",
+            isResolved = true,
         )
     }
 

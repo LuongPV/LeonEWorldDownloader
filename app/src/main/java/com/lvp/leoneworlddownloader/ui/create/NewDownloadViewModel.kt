@@ -22,15 +22,23 @@ class NewDownloadViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         NewDownloadUiState(
-            url = "",
+            url = "https://file-examples.com/storage/fe1b802e1565fe057a1d758/2017/04/file_example_MP4_1920_18MG.mp4",
             showInvalidUrlDialog = false,
         )
     )
     val uiState = _uiState.asStateFlow()
 
     fun updateUrl(newUrl: String) {
+        var uiState = _uiState.value
+        uiState = uiState.copy(url = newUrl)
+        if (uiState.urlResource.url != newUrl) {
+            uiState = uiState.copy(
+                loadingState = LoadingState.NotStarted,
+                urlResource = UrlResource.Default,
+            )
+        }
         _uiState.update {
-            it.copy(url = newUrl)
+            uiState
         }
     }
 
@@ -63,6 +71,10 @@ class NewDownloadViewModel @Inject constructor(
         _uiState.update {
             it.copy(showInvalidUrlDialog = false)
         }
+    }
+
+    fun addDownload() {
+        downloadRepository.addDownload(_uiState.value.url)
     }
 }
 

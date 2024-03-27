@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -85,6 +90,10 @@ fun NewDownloadScreen(
                 },
                 onDoneEnteringUrl = {
                     viewModel.inspectUrl()
+                },
+                onAddingNewDownload = {
+                    viewModel.addDownload()
+                    onBack.invoke()
                 }
             )
         }
@@ -103,7 +112,8 @@ fun NewDownloadScreen(
 private fun NewDownloadInfo(
     uiState: NewDownloadUiState,
     onUrlTyping: SingleDataCallback<String>,
-    onDoneEnteringUrl: EmptyDataCallback
+    onDoneEnteringUrl: EmptyDataCallback,
+    onAddingNewDownload: EmptyDataCallback,
 ) {
     Column(
         Modifier
@@ -125,6 +135,7 @@ private fun NewDownloadInfo(
                 isEnabled = isInputEnabled,
                 modifier = Modifier.weight(1f),
                 textHint = R.string.txt_hint_paste_url,
+                text = uiState.url,
                 onValueTyped = { true },
                 onAfterValueChange = onUrlTyping,
                 onDone = onDoneEnteringUrl,
@@ -182,6 +193,25 @@ private fun NewDownloadInfo(
 
             }
         )
+        Spacer(modifier = Modifier.height(32.dp))
+        val isUrlResourceResolved = uiState.urlResource.isResolved
+        Button(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            onClick = onAddingNewDownload,
+            enabled = isUrlResourceResolved,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(if (isUrlResourceResolved) 0xFF2A862E else 0xFFC0C0C0),
+                contentColor = Color.White
+            )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.txt_add_download))
+                Spacer(modifier = Modifier.size(8.dp))
+                Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription = null)
+            }
+        }
     }
 }
 

@@ -156,9 +156,11 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
     PaddingItemSeparator()
     val downloadSpeedKBSValue = stringResource(R.string.download_speed_kb_s)
     val downloadSpeedMBSValue = stringResource(R.string.download_speed_mb_s)
+    var rememberValue by remember { mutableStateOf("") }
     InputValueSettingItem(
         icon = R.drawable.ic_maximum_download_speed,
         title = stringResource(R.string.txt_maximum_download_speed),
+        value = rememberValue,
         unitContent = {
             Spacer(modifier = Modifier.width(16.dp))
             var selectedSpeedValue by remember { mutableStateOf(downloadSpeedKBSValue) }
@@ -192,8 +194,9 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
             }
         },
         onValueChange = {
-
-        })
+            rememberValue = it
+        },
+    )
     PaddingItemSeparator()
     ClickSettingItem(
         icon = R.drawable.ic_download_location,
@@ -282,20 +285,22 @@ private fun SelectionSettingItem(
 
 @Composable
 private fun InputValueSettingItem(
-    modifier: Modifier = Modifier,
     icon: Int,
     title: String,
+    value: String,
     unitContent: ComposableContent,
     onValueChange: SingleDataCallback<String>,
 ) {
-    SettingItem(modifier = modifier, icon = icon, title = title) {
+    SettingItem(icon = icon, title = title) {
         Spacer(modifier = Modifier.size(4.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             InputTextField(
+                modifier = Modifier.weight(1f),
                 isEnabled = true,
                 textHint = R.string.txt_hint_not_set_value,
+                text = value,
                 keyboardType = KeyboardType.Number,
                 onValueTyped = {
                     it == "" || (it.length <= 10 && it.isInt() && it.toInt() > 0)

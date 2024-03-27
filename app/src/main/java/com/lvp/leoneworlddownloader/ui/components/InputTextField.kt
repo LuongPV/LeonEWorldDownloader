@@ -4,8 +4,8 @@ import android.text.TextUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,10 +14,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,24 +36,21 @@ fun InputTextField(
     isEnabled: Boolean,
     textStyle: TextStyle = TextStyle.Default,
     textHint: Int,
+    text: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueTyped: SingleDataConverterCallback<String, Boolean>,
     onAfterValueChange: SingleDataCallback<String>,
     onDone: EmptyDataCallback,
 ) {
-    var rememberValue by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
-    fun updateValue(newValue: String) {
-        rememberValue = newValue
-        onAfterValueChange.invoke(rememberValue)
-    }
-    Box(
+    Row(
         modifier = modifier
             .border(2.dp, Color(0xFFCFCFCF), RoundedCornerShape(12.dp))
             .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.weight(1f),
             enabled = isEnabled,
             textStyle = textStyle,
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -69,7 +62,7 @@ fun InputTextField(
             }),
             singleLine = true,
             decorationBox = { innerTextField ->
-                if (rememberValue.isEmpty()) {
+                if (text.isEmpty()) {
                     Text(
                         text = stringResource(textHint), color = Color(0xFF838383),
                         style = TextStyle(
@@ -79,21 +72,21 @@ fun InputTextField(
                 }
                 innerTextField()
             },
-            value = rememberValue,
+            value = text,
             onValueChange = {
                 println("value: $it")
                 if (onValueTyped(it)) {
-                    updateValue(it)
+                    onAfterValueChange.invoke(it)
                 }
             },
         )
-        val isClearEnabled = isEnabled && !TextUtils.isEmpty(rememberValue)
+        Spacer(modifier = Modifier.size(8.dp))
+        val isClearEnabled = isEnabled && !TextUtils.isEmpty(text)
         Image(
             modifier = Modifier
                 .size(24.dp)
-                .align(Alignment.CenterEnd)
                 .clickable(enabled = isClearEnabled, onClick = {
-                    updateValue("")
+                    onAfterValueChange.invoke("")
                 }),
             painter = painterResource(id = R.drawable.ic_clear),
             contentDescription = null,

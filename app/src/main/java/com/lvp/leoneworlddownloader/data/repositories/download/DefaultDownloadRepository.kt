@@ -131,4 +131,8 @@ class DefaultDownloadRepository @Inject constructor(
         cachedDownloads.removeIf { it.id == downloadId }
     }
 
+    override fun addDownload(url: String) {
+
+    }
+
 }
