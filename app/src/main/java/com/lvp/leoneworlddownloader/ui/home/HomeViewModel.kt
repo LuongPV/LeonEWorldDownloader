@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.lvp.leoneworlddownloader.data.models.DownloadAction
 import com.lvp.leoneworlddownloader.data.models.DownloadSortType
 import com.lvp.leoneworlddownloader.data.models.SortOrder
-import com.lvp.leoneworlddownloader.data.repositories.DownloadRepository
+import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,4 +1,4 @@
-package com.lvp.leoneworlddownloader.data.repositories
+package com.lvp.leoneworlddownloader.data.repositories.download
 
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 

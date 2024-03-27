@@ -18,6 +18,7 @@ import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
 @Composable
 fun ValueSelectionDialog(
+    isVisible: Boolean,
     modifier: Modifier = Modifier,
     text: String,
     selectedValue: String,
@@ -26,6 +27,7 @@ fun ValueSelectionDialog(
     onDismiss: EmptyDataCallback,
 ) {
     InformationDialog(
+        isVisible = isVisible,
         modifier = modifier,
         text = text,
         onDismiss = onDismiss
@@ -58,6 +60,7 @@ fun ValueSelectionDialog(
 @Composable
 private fun ValueSelectionDialogPreview() {
     ValueSelectionDialog(
+        isVisible = true,
         text = "Preview",
         selectedValue = "2",
         values = listOf("1", "2", "3"),

@@ -1,4 +1,4 @@
-package com.lvp.leoneworlddownloader.data.repositories
+package com.lvp.leoneworlddownloader.data.repositories.download
 
 import android.os.Build
 import androidx.annotation.RequiresApi

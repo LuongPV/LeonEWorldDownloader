@@ -103,19 +103,18 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
         ) {
             isThemeSelectionShown = true
         }
-        if (isThemeSelectionShown) {
-            ValueSelectionDialog(
-                text = stringResource(R.string.txt_dlg_choose_theme),
-                selectedValue = selectedThemeValue,
-                values = listOf(themeLight, themeDark, themeSystem),
-                onValueChange = {
-                    selectedThemeValue = it
-                },
-                onDismiss = {
-                    isThemeSelectionShown = false
-                },
-            )
-        }
+        ValueSelectionDialog(
+            isVisible = isThemeSelectionShown,
+            text = stringResource(R.string.txt_dlg_choose_theme),
+            selectedValue = selectedThemeValue,
+            values = listOf(themeLight, themeDark, themeSystem),
+            onValueChange = {
+                selectedThemeValue = it
+            },
+            onDismiss = {
+                isThemeSelectionShown = false
+            },
+        )
         PaddingItemSeparator()
         SwitchSettingItem(
             icon = R.drawable.ic_percentage,
@@ -266,17 +265,16 @@ private fun SelectionSettingItem(
                     modifier = Modifier.size(16.dp),
                     contentDescription = null,
                 )
-                if (isSelectionShown) {
-                    ValueSelectionDialog(
-                        text = "Select maximum concurrent downloads",
-                        selectedValue = selectedValue,
-                        values = values,
-                        onValueChange = onValueChange,
-                        onDismiss = {
-                            isSelectionShown = false
-                        },
-                    )
-                }
+                ValueSelectionDialog(
+                    isVisible = isSelectionShown,
+                    text = "Select maximum concurrent downloads",
+                    selectedValue = selectedValue,
+                    values = values,
+                    onValueChange = onValueChange,
+                    onDismiss = {
+                        isSelectionShown = false
+                    },
+                )
             }
         }
     }
@@ -302,6 +300,9 @@ private fun InputValueSettingItem(
                     it == "" || (it.length <= 10 && it.isInt() && it.toInt() > 0)
                 },
                 onAfterValueChange = onValueChange,
+                onDone = {
+
+                }
             )
             unitContent.invoke()
         }

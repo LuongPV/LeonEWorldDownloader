@@ -1,7 +1,6 @@
 package com.lvp.leoneworlddownloader.ui.create
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,22 +14,28 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.resources.stringResourceFileType
 import com.lvp.leoneworlddownloader.ui.components.BackTopBar
+import com.lvp.leoneworlddownloader.ui.components.InformationDialog
 import com.lvp.leoneworlddownloader.ui.components.InputTextField
 import com.lvp.leoneworlddownloader.ui.components.LoadingPlaceholder
 import com.lvp.leoneworlddownloader.ui.components.LoadingState
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
+import com.lvp.leoneworlddownloader.utils.SingleDataCallback
+import com.lvp.leoneworlddownloader.utils.getHumanReadableFileSize
 
 const val RouteNewDownload = "NewDownload"
 
@@ -40,6 +45,7 @@ fun NewDownloadScreen(
     viewModel: NewDownloadViewModel,
     onBack: EmptyDataCallback,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -55,21 +61,46 @@ fun NewDownloadScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Box(
-            modifier = Modifier.fillMaxSize().padding(bottom = 24.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 24.dp)
         ) {
             Image(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).alpha(0.2f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .alpha(0.2f),
                 painter = painterResource(id = R.drawable.bg_add_download),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
             )
-            NewDownloadInfo()
+            NewDownloadInfo(
+                uiState = uiState,
+                onUrlTyping = {
+                    viewModel.updateUrl(it)
+                },
+                onDoneEnteringUrl = {
+                    viewModel.inspectUrl()
+                }
+            )
         }
     }
+    InformationDialog(
+        isVisible = uiState.showInvalidUrlDialog,
+        text = stringResource(R.string.txt_dlg_invalid_url),
+        onDismiss = {
+            viewModel.dismissInvalidUrlDialog()
+        },
+        content = {},
+    )
 }
 
 @Composable
-private fun NewDownloadInfo() {
+private fun NewDownloadInfo(
+    uiState: NewDownloadUiState,
+    onUrlTyping: SingleDataCallback<String>,
+    onDoneEnteringUrl: EmptyDataCallback
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -84,11 +115,18 @@ private fun NewDownloadInfo() {
                 modifier = Modifier.weight(1f),
                 textHint = R.string.txt_hint_paste_url,
                 onValueTyped = { true },
-                onAfterValueChange = {},
+                onAfterValueChange = onUrlTyping,
+                onDone = onDoneEnteringUrl,
             )
             Spacer(modifier = Modifier.size(8.dp))
+            val focusManager = LocalFocusManager.current
             Image(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable {
+                        focusManager.clearFocus()
+                        onDoneEnteringUrl.invoke()
+                    },
                 painter = painterResource(R.drawable.ic_enter_url),
                 contentDescription = null,
             )
@@ -100,28 +138,29 @@ private fun NewDownloadInfo() {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
+        val urlResource = uiState.urlResource!!
         DownloadInfoItem(
             label = R.string.txt_new_download_file_name,
-            value = "",
-            loadingState = LoadingState.Loading
+            value = urlResource.fileName,
+            loadingState = uiState.loadingState,
         )
         Spacer(modifier = Modifier.height(8.dp))
         DownloadInfoItem(
             label = R.string.txt_new_download_file_type,
-            value = "",
-            loadingState = LoadingState.Loading
+            value = stringResourceFileType(fileType = urlResource.fileType),
+            loadingState = uiState.loadingState,
         )
         Spacer(modifier = Modifier.height(8.dp))
         DownloadInfoItem(
             label = R.string.txt_new_download_file_size,
-            value = "",
-            loadingState = LoadingState.Loading
+            value = getHumanReadableFileSize(urlResource.fileSize),
+            loadingState = uiState.loadingState,
         )
         Spacer(modifier = Modifier.height(8.dp))
         DownloadInfoItem(
             label = R.string.txt_new_download_save_location,
-            value = "",
-            loadingState = LoadingState.Loaded,
+            value = urlResource.saveLocation,
+            loadingState = uiState.loadingState,
             actionButton = ActionButton(
                 icon = R.drawable.ic_browse
             ) {
@@ -157,7 +196,7 @@ private fun DownloadInfoItem(
                     modifier = Modifier.weight(1f),
                     text = value,
                     fontSize = 18.sp,
-                    maxLines = 1,
+                    fontWeight = FontWeight.Bold,
                 )
                 if (actionButton != null) {
                     Spacer(modifier = Modifier.size(8.dp))

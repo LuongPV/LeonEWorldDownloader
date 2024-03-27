@@ -32,6 +32,7 @@ fun ConfirmationDialog(
         modifier = modifier,
     ) {
         GeneralDialog(
+            isVisible = true,
             text = text,
             mainContent = content,
             buttonContent = {

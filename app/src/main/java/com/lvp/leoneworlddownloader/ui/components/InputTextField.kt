@@ -1,7 +1,6 @@
 package com.lvp.leoneworlddownloader.ui.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -21,7 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
 
@@ -32,6 +31,7 @@ fun InputTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueTyped: SingleDataConverterCallback<String, Boolean>,
     onAfterValueChange: SingleDataCallback<String>,
+    onDone: EmptyDataCallback,
 ) {
     var rememberValue by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -43,8 +43,8 @@ fun InputTextField(
             keyboardType = keyboardType,
         ),
         keyboardActions = KeyboardActions(onDone = {
-            println("done")
             focusManager.clearFocus()
+            onDone.invoke()
         }),
         singleLine = true,
         decorationBox = { innerTextField ->

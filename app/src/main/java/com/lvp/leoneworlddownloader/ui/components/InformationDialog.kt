@@ -15,16 +15,21 @@ import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InformationDialog(
+    isVisible: Boolean,
     modifier: Modifier = Modifier,
     text: String,
     onDismiss: EmptyDataCallback,
     content: ComposableContent,
 ) {
+    if (!isVisible) {
+        return
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,
     ) {
         GeneralDialog(
+            isVisible = true,
             text = text,
             mainContent = content,
             buttonContent = {
