@@ -16,7 +16,7 @@ class OkHttpBrowsableApi @Inject constructor(
 
     override suspend fun inspectUrl(url: String): UrlResource {
         return withContext(Dispatchers.IO) {
-            val request = Request.Builder().url(url).build()
+            val request = Request.Builder().url(url).method("HEAD", null).build()
             val response = okHttpClient.newCall(request).execute()
             val contentLength = response.header("content-length")!!.toLong()
             val contentType = response.header("content-type")!!
