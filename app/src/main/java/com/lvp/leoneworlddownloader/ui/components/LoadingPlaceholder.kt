@@ -17,11 +17,12 @@ import com.lvp.leoneworlddownloader.utils.ComposableContent
 
 @Composable
 fun LoadingPlaceholder(
-    loadingState: LoadingState,
+    modifier: Modifier = Modifier,
+    loadingState: LoadingState = LoadingState.NotStarted,
     loadedContent: ComposableContent,
 ) {
     val iconModifier = Modifier.size(24.dp)
-    Box(contentAlignment = Alignment.Center) {
+    Box(contentAlignment = Alignment.CenterEnd, modifier = modifier) {
         when (loadingState) {
             LoadingState.NotStarted -> return
             LoadingState.Loading -> CircularProgressIndicator(
@@ -52,7 +53,7 @@ enum class LoadingState {
 @Preview
 @Composable
 private fun LoadingPlaceholderPreviewLoaded() {
-    LoadingPlaceholder(LoadingState.Loaded) {
+    LoadingPlaceholder(loadingState = LoadingState.Loaded) {
 
     }
 }
@@ -60,7 +61,7 @@ private fun LoadingPlaceholderPreviewLoaded() {
 @Preview
 @Composable
 private fun LoadingPlaceholderPreviewNotLoaded() {
-    LoadingPlaceholder(LoadingState.Loading) {
+    LoadingPlaceholder(loadingState = LoadingState.Loading) {
 
     }
 }

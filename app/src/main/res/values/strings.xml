@@ -54,5 +54,10 @@
     <string name="txt_add_new_download">Settings</string>
     <string name="txt_sub_add_new_download">Modify your preferences</string>
     <string name="txt_hint_not_set_value">Not set</string>
-    <string name="txt_hint_paste_url">Paste url here</string>
+    <string name="txt_hint_paste_url">https://</string>
+    <string name="txt_new_download_download_information">Download information</string>
+    <string name="txt_new_download_file_name">File name:</string>
+    <string name="txt_new_download_file_type">File type:</string>
+    <string name="txt_new_download_file_size">File size:</string>
+    <string name="txt_new_download_save_location">Save location:</string>
 </resources>
