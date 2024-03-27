@@ -16,11 +16,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -173,9 +169,7 @@ private fun HomeContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            TopBar(modifier) {
-                onOpenDrawer.invoke()
-            }
+            TopBar(modifier, onMenuClicked = onOpenDrawer, onAddNewDownloadClick = onAddNewDownload)
             Spacer(modifier = Modifier.height(16.dp))
             HomeDownloadSorter(uiState)
             HomeDownloadList(
@@ -184,9 +178,6 @@ private fun HomeContent(
                 onGetDownloads = onGetDownloads,
                 onDownloadItemClick = onDownloadItemClick,
             )
-        }
-        FloatingActionButton(modifier = Modifier.padding(32.dp), onClick = onAddNewDownload) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = null)
         }
     }
 }
@@ -270,7 +261,11 @@ private fun processDownloadAction(
 }
 
 @Composable
-private fun TopBar(modifier: Modifier = Modifier, onMenuClicked: EmptyDataCallback) {
+private fun TopBar(
+    modifier: Modifier = Modifier,
+    onMenuClicked: EmptyDataCallback,
+    onAddNewDownloadClick: EmptyDataCallback,
+) {
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -291,6 +286,16 @@ private fun TopBar(modifier: Modifier = Modifier, onMenuClicked: EmptyDataCallba
             subtitle = R.string.txt_sub_downloads,
         )
         Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = onAddNewDownloadClick, modifier = Modifier
+                .size(64.dp)
+                .padding(12.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_add_download),
+                contentDescription = null
+            )
+        }
     }
 }
 
