@@ -1,5 +1,6 @@
 package com.lvp.leoneworlddownloader.ui.create
 
+import android.text.TextUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,10 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -111,7 +115,14 @@ private fun NewDownloadInfo(
         ) {
             Text(text = "Url:", fontSize = 18.sp)
             Spacer(modifier = Modifier.size(8.dp))
+            val isInputEnabled = uiState.loadingState != LoadingState.Loading
+            val isInspectEnabled = isInputEnabled && !TextUtils.isEmpty(uiState.url)
             InputTextField(
+                textStyle = TextStyle(
+                    color = Color(if (isInputEnabled) 0xFF000000 else 0xFFC5C5C5),
+                    fontWeight = FontWeight.Bold
+                ),
+                isEnabled = isInputEnabled,
                 modifier = Modifier.weight(1f),
                 textHint = R.string.txt_hint_paste_url,
                 onValueTyped = { true },
@@ -123,14 +134,18 @@ private fun NewDownloadInfo(
             Image(
                 modifier = Modifier
                     .size(32.dp)
-                    .clickable {
+                    .clickable(
+                        enabled = isInspectEnabled,
+                    ) {
                         focusManager.clearFocus()
                         onDoneEnteringUrl.invoke()
                     },
                 painter = painterResource(R.drawable.ic_enter_url),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(Color(if (isInspectEnabled) 0xFF1E7917 else 0xFFC5C5C5))
             )
         }
+        Color(0xFFC5C5C5)
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = stringResource(R.string.txt_new_download_download_information),
@@ -138,7 +153,7 @@ private fun NewDownloadInfo(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
-        val urlResource = uiState.urlResource!!
+        val urlResource = uiState.urlResource
         DownloadInfoItem(
             label = R.string.txt_new_download_file_name,
             value = urlResource.fileName,

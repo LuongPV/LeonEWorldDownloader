@@ -2,7 +2,6 @@ package com.lvp.leoneworlddownloader.ui.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lvp.leoneworlddownloader.data.models.NullUrlResource
 import com.lvp.leoneworlddownloader.data.models.UrlResource
 import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
 import com.lvp.leoneworlddownloader.data.repositories.url.UrlRepository
@@ -39,7 +38,9 @@ class NewDownloadViewModel @Inject constructor(
         val url = _uiState.value.url
         if (isUrlValid(url)) {
             _uiState.update {
-                it.copy(loadingState = LoadingState.Loading)
+                it.copy(
+                    loadingState = LoadingState.Loading,
+                )
             }
             viewModelScope.launch {
                 delay(3000)
@@ -69,5 +70,5 @@ data class NewDownloadUiState(
     val url: String,
     val showInvalidUrlDialog: Boolean,
     val loadingState: LoadingState = LoadingState.NotStarted,
-    val urlResource: UrlResource = NullUrlResource()
+    val urlResource: UrlResource = UrlResource.Default
 )

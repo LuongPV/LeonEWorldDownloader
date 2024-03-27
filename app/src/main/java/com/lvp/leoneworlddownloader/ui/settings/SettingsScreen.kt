@@ -294,6 +294,7 @@ private fun InputValueSettingItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             InputTextField(
+                isEnabled = true,
                 textHint = R.string.txt_hint_not_set_value,
                 keyboardType = KeyboardType.Number,
                 onValueTyped = {
