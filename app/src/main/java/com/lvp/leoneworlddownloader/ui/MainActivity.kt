@@ -1,6 +1,7 @@
 package com.lvp.leoneworlddownloader.ui
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
-
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         setContent {
             Surface(
                 modifier = Modifier

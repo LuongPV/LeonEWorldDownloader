@@ -4,12 +4,12 @@ import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 
 interface DownloadRepository {
 
-    fun getDownloads(): List<DownloadInfo>
+    suspend fun getDownloads(): List<DownloadInfo>
 
-    fun getDownload(downloadId: String): DownloadInfo?
+    suspend fun getDownload(downloadId: String): DownloadInfo?
 
-    fun removeDownload(downloadId: String)
+    suspend fun removeDownload(downloadId: String)
 
-    fun addDownload(url: String)
+    suspend fun addDownload(url: String)
 
 }

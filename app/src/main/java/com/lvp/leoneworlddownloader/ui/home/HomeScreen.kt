@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
@@ -47,8 +48,6 @@ import com.lvp.leoneworlddownloader.ui.components.TopBanner
 import com.lvp.leoneworlddownloader.utils.DoubleDataCallback
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
-import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
-import com.lvp.leoneworlddownloader.utils.SingleDataReturnCallback
 import kotlinx.coroutines.launch
 
 const val RouteHome = "Home"
@@ -63,6 +62,7 @@ fun HomeScreen(
     onDownloadDetails: SingleDataCallback<String>,
     onAddNewDownload: EmptyDataCallback,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,23 +93,9 @@ fun HomeScreen(
             onSettingsClicked = onNavigateSettings,
             onAboutClicked = onNavigateAbout,
         ) {
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             HomeContent(
                 uiState = uiState,
-                onGetDownload = {
-                    viewModel.getDownload(it)!!
-                },
-                onRemoveDownload = {
-                    viewModel.removeDownload(it)
-                    viewModel.confirmRemoveDownload(null)
-                },
-                onDismissRemoveDownload = {
-                    viewModel.confirmRemoveDownload(null)
-                },
                 onDownloadItemClick = onDownloadDetails,
-                onGetDownloads = {
-                    viewModel.getDownloads()
-                },
                 onOpenDrawer = {
                     viewModel.openDrawer()
                 },
@@ -123,24 +109,8 @@ fun HomeScreen(
             )
         }
     }
-}
-
-@Composable
-private fun HomeContent(
-    modifier: Modifier = Modifier,
-    uiState: HomeUiState,
-    onGetDownload: SingleDataConverterCallback<String, DownloadInfo>,
-    onRemoveDownload: SingleDataCallback<String>,
-    onDismissRemoveDownload: SingleDataCallback<String>,
-    onDownloadItemClick: SingleDataCallback<String>,
-    onGetDownloads: SingleDataReturnCallback<List<DownloadInfo>>,
-    onOpenDrawer: EmptyDataCallback,
-    onConfirmRemoveDownload: SingleDataCallback<String>,
-    onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
-    onAddNewDownload: EmptyDataCallback,
-) {
     if (uiState.confirmRemoveDownloadId != null) {
-        val downloadInfo = onGetDownload.invoke(uiState.confirmRemoveDownloadId)
+        val downloadInfo = uiState.downloadInfos.find { it.id == uiState.confirmRemoveDownloadId }!!
         ConfirmationDialog(
             isVisible = true,
             text = "Are you sure you want to remove this download?\n${downloadInfo.fileName}",
@@ -148,22 +118,34 @@ private fun HomeContent(
             optionalButtonContent = {
                 Spacer(modifier = Modifier.size(8.dp))
                 TextButton(onClick = {
-                    onRemoveDownload.invoke(downloadInfo.id)
+                    viewModel.removeDownload(downloadInfo.id)
+                    viewModel.confirmRemoveDownload(null)
                 }) {
                     Text(text = stringResource(R.string.txt_dlg_remove_download))
                 }
             },
             onDismiss = {
-                onDismissRemoveDownload.invoke(downloadInfo.id)
+                viewModel.confirmRemoveDownload(null)
             },
         )
     }
+}
+
+@Composable
+private fun HomeContent(
+    modifier: Modifier = Modifier,
+    uiState: HomeUiState,
+    onDownloadItemClick: SingleDataCallback<String>,
+    onOpenDrawer: EmptyDataCallback,
+    onConfirmRemoveDownload: SingleDataCallback<String>,
+    onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
+    onAddNewDownload: EmptyDataCallback,
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0))
             .safeContentPadding(),
-        contentAlignment = Alignment.BottomEnd,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -173,9 +155,9 @@ private fun HomeContent(
             Spacer(modifier = Modifier.height(16.dp))
             HomeDownloadSorter(uiState)
             HomeDownloadList(
+                uiState = uiState,
                 onConfirmRemoveDownload = onConfirmRemoveDownload,
                 onProcessDownloadAction = onProcessDownloadAction,
-                onGetDownloads = onGetDownloads,
                 onDownloadItemClick = onDownloadItemClick,
             )
         }
@@ -219,12 +201,16 @@ fun HomeDownloadSorter(uiState: HomeUiState) {
 
 @Composable
 fun HomeDownloadList(
-    onGetDownloads: SingleDataReturnCallback<List<DownloadInfo>>,
+    uiState: HomeUiState,
     onDownloadItemClick: SingleDataCallback<String>,
     onConfirmRemoveDownload: SingleDataCallback<String>,
     onProcessDownloadAction: DoubleDataCallback<String, DownloadAction>,
 ) {
-    val downloads = onGetDownloads.invoke()
+    val downloads = uiState.downloadInfos
+    if (downloads.isEmpty()) {
+        EmptyDownload()
+        return
+    }
     LazyColumn(modifier = Modifier.padding(16.dp),
         content = {
             items(downloads.size) {
@@ -243,6 +229,22 @@ fun HomeDownloadList(
                 Spacer(modifier = Modifier.size(16.dp))
             }
         })
+}
+
+@Composable
+fun EmptyDownload() {
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_no_data),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Text("No downloads added", fontSize = 20.sp, color = Color(0xFF868686))
+    }
 }
 
 private fun processDownloadAction(

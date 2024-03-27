@@ -15,11 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,13 +36,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.resources.drawableResourceBackgroundFileType
 import com.lvp.leoneworlddownloader.resources.stringResourceDownloadStatus
 import com.lvp.leoneworlddownloader.resources.stringResourceFileType
 import com.lvp.leoneworlddownloader.ui.components.BackTopBar
-import com.lvp.leoneworlddownloader.ui.components.TopBanner
+import com.lvp.leoneworlddownloader.ui.components.InfiniteLoading
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.getDownloadStatusColor
 import com.lvp.leoneworlddownloader.utils.getHumanReadableFileSize
@@ -60,11 +57,16 @@ fun DownloadDetailsScreen(
     onBack: EmptyDataCallback,
     viewModel: DownloadDetailsViewModel,
 ) {
-    val downloadInfo = viewModel.getDownloadDetails()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    if (uiState.downloadInfo == null) {
+        InfiniteLoading()
+        return
+    }
     Box(
         modifier = Modifier.background(Color.White),
         contentAlignment = Alignment.BottomCenter,
     ) {
+        val downloadInfo = uiState.downloadInfo!!
         Image(
             painter = painterResource(drawableResourceBackgroundFileType(downloadInfo.fileType)),
             contentScale = ContentScale.FillWidth,
