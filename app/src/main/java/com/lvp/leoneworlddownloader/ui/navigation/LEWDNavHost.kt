@@ -53,9 +53,12 @@ fun LEWDNavHost(
             )
         }
         composable(RouteSettings) {
-            SettingsScreen(onBack = {
-                navController.popBackStack()
-            })
+            SettingsScreen(
+                viewModel = hiltViewModel(),
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
         }
         composable(RouteDownloadDetails) {
             DownloadDetailsScreen(

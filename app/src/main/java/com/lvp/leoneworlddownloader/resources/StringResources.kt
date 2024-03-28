@@ -3,9 +3,11 @@ package com.lvp.leoneworlddownloader.resources
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.data.models.AppTheme
 import com.lvp.leoneworlddownloader.data.models.DownloadSortType
 import com.lvp.leoneworlddownloader.data.models.DownloadStatus
 import com.lvp.leoneworlddownloader.data.models.FileType
+import com.lvp.leoneworlddownloader.data.models.LimitDataSpeedUnit
 import com.lvp.leoneworlddownloader.data.models.SortOrder
 
 @Composable
@@ -51,6 +53,27 @@ fun stringResourceFileType(fileType: FileType): String {
             FileType.AUDIO -> R.string.txt_file_type_audio
             FileType.APPLICATION -> R.string.txt_file_type_application
             FileType.OTHER -> R.string.txt_file_type_other
+        }
+    )
+}
+
+@Composable
+fun stringResourceTheme(theme: AppTheme): String {
+    return stringResource(
+        when (theme) {
+            AppTheme.LIGHT -> R.string.txt_settings_theme_light
+            AppTheme.DARK -> R.string.txt_settings_theme_dark
+            AppTheme.SYSTEM -> R.string.txt_settings_theme_system
+        }
+    )
+}
+
+@Composable
+fun stringResourceLimitDataSpeedUnit(limitDataSpeedUnit: LimitDataSpeedUnit): String {
+    return stringResource(
+        when (limitDataSpeedUnit) {
+            LimitDataSpeedUnit.KB -> R.string.download_speed_kb_s
+            LimitDataSpeedUnit.MB -> R.string.download_speed_mb_s
         }
     )
 }

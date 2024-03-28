@@ -6,10 +6,10 @@
     <string name="txt_maximum_concurrent_downloads">Maximum concurrent downloads</string>
     <string name="txt_group_download">Download</string>
     <string name="txt_group_general">General</string>
-    <string name="val_theme_light">Light</string>
-    <string name="val_theme_dark" translatable="false">Dark</string>
-    <string name="val_theme_system" translatable="false">System</string>
-    <string name="txt_setting_theme" translatable="false">Theme</string>
+    <string name="txt_settings_theme_light">Light</string>
+    <string name="txt_settings_theme_dark">Dark</string>
+    <string name="txt_settings_theme_system">System</string>
+    <string name="txt_setting_theme">Theme</string>
     <string name="txt_setting_show_download_percentage">Show download percentage</string>
     <string name="txt_dlg_choose_theme">Choose theme</string>
     <string name="txt_settings">Settings</string>
@@ -68,4 +68,5 @@
     <string name="txt_download_detail_save_location">Save location:</string>
     <string name="txt_download_detail_date_added">Date added:</string>
     <string name="txt_download_detail_downloaded">Downloaded:</string>
+    <string name="txt_settings_downloaded_file_location">Downloaded file location</string>
 </resources>

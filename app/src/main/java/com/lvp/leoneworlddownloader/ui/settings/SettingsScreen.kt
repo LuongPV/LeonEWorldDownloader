@@ -3,6 +3,7 @@ package com.lvp.leoneworlddownloader.ui.settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,14 +36,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lvp.leoneworlddownloader.R
+import com.lvp.leoneworlddownloader.data.models.AppTheme
+import com.lvp.leoneworlddownloader.data.models.LimitDataSpeedUnit
+import com.lvp.leoneworlddownloader.resources.stringResourceLimitDataSpeedUnit
+import com.lvp.leoneworlddownloader.resources.stringResourceTheme
 import com.lvp.leoneworlddownloader.ui.components.BackTopBar
 import com.lvp.leoneworlddownloader.ui.components.InputTextField
+import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDataItem
 import com.lvp.leoneworlddownloader.ui.components.ValueSelectionDialog
 import com.lvp.leoneworlddownloader.utils.ComposableContent
+import com.lvp.leoneworlddownloader.utils.ComposableSingleDataConverterCallback
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
 import com.lvp.leoneworlddownloader.utils.SingleDataCallback
-import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
 import com.lvp.leoneworlddownloader.utils.isInt
 import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
@@ -51,6 +59,7 @@ const val RouteSettings = "Settings"
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel,
     onBack: EmptyDataCallback,
 ) {
     Column(
@@ -66,16 +75,42 @@ fun SettingsScreen(
             onBack = onBack,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        GeneralSettings()
-        DownloadSettings()
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        GeneralSettings(
+            uiState = uiState,
+            onCheckShowingDownloadPercentage = {
+                viewModel.toggleShowDownloadPercentage(it)
+            },
+            onThemeSelection = {
+                viewModel.selectTheme(it)
+            }
+        )
+        DownloadSettings(
+            uiState = uiState,
+            onMaxConcurrentDownloadsChange = {
+                viewModel.changeMaxConcurrentDownloads(it.toInt())
+            },
+            onMaxDownloadSpeedChange = {
+                viewModel.changeMaxDownloadSpeed(it.toIntOrNull())
+            },
+            onMaxDownloadSpeedUnitChange = {
+                viewModel.changeMaxDownloadSpeedUnit(it)
+            },
+            onChooseSaveLocation = {
+
+            },
+        )
     }
 }
 
 @Composable
-private fun GeneralSettings(modifier: Modifier = Modifier) {
-    var isChecked by remember {
-        mutableStateOf(false)
-    }
+private fun GeneralSettings(
+    modifier: Modifier = Modifier,
+    uiState: SettingsUiState,
+    onCheckShowingDownloadPercentage: SingleDataCallback<Boolean>,
+    onThemeSelection: SingleDataCallback<AppTheme>,
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -91,25 +126,21 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
             ),
         )
         PaddingItemSeparator()
-        val themeLight = stringResource(R.string.val_theme_light)
-        val themeDark = stringResource(R.string.val_theme_dark)
-        val themeSystem = stringResource(R.string.val_theme_system)
-        var selectedThemeValue by remember { mutableStateOf(themeLight) }
         var isThemeSelectionShown by remember { mutableStateOf(false) }
         ClickSettingItem(
             icon = R.drawable.ic_theme,
             title = stringResource(R.string.txt_setting_theme),
-            subtitle = selectedThemeValue
+            subtitle = stringResourceTheme(theme = uiState.theme)
         ) {
             isThemeSelectionShown = true
         }
         ValueSelectionDialog(
             isVisible = isThemeSelectionShown,
             text = stringResource(R.string.txt_dlg_choose_theme),
-            selectedValue = selectedThemeValue,
-            values = listOf(themeLight, themeDark, themeSystem),
+            selectedValue = uiState.theme,
+            values = AppTheme.entries.map { ValueSelectionDataItem(stringResourceTheme(it), it) },
             onValueChange = {
-                selectedThemeValue = it
+                onThemeSelection.invoke(it)
             },
             onDismiss = {
                 isThemeSelectionShown = false
@@ -119,16 +150,21 @@ private fun GeneralSettings(modifier: Modifier = Modifier) {
         SwitchSettingItem(
             icon = R.drawable.ic_percentage,
             title = stringResource(R.string.txt_setting_show_download_percentage),
-            isChecked = isChecked,
-            onCheckedChange = {
-                isChecked = it
-            }
+            isChecked = uiState.isShowingDownloadPercentage,
+            onCheckedChange = onCheckShowingDownloadPercentage,
         )
     }
 }
 
 @Composable
-private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
+private fun DownloadSettings(
+    modifier: Modifier = Modifier,
+    uiState: SettingsUiState,
+    onMaxConcurrentDownloadsChange: SingleDataCallback<String>,
+    onMaxDownloadSpeedChange: SingleDataCallback<String>,
+    onMaxDownloadSpeedUnitChange: SingleDataCallback<LimitDataSpeedUnit>,
+    onChooseSaveLocation: EmptyDataCallback,
+) = Column(
     modifier = modifier
         .fillMaxWidth()
         .padding(all = 16.dp)
@@ -143,35 +179,30 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
         ),
     )
     PaddingItemSeparator()
-    var selectedValue by remember { mutableStateOf("4") }
     SelectionSettingItem(
         icon = R.drawable.ic_maximum_concurrent_downloads,
         title = stringResource(R.string.txt_maximum_concurrent_downloads),
-        selectedValue = selectedValue,
-        values = listOf(1, 2, 3, 4, 5, 6, 7, 8).map { "$it" },
-        onValueChange = {
-            selectedValue = it
-        }
+        selectedValue = uiState.maxConcurrentDownloads.toString(),
+        values = listOf(1, 2, 3, 4).map { "$it" },
+        onValueChange = onMaxConcurrentDownloadsChange
     )
     PaddingItemSeparator()
-    val downloadSpeedKBSValue = stringResource(R.string.download_speed_kb_s)
-    val downloadSpeedMBSValue = stringResource(R.string.download_speed_mb_s)
-    var rememberValue by remember { mutableStateOf("") }
+    val downloadSpeedKBSValue = stringResourceLimitDataSpeedUnit(LimitDataSpeedUnit.KB)
+    val downloadSpeedMBSValue = stringResourceLimitDataSpeedUnit(LimitDataSpeedUnit.MB)
     InputValueSettingItem(
         icon = R.drawable.ic_maximum_download_speed,
         title = stringResource(R.string.txt_maximum_download_speed),
-        value = rememberValue,
+        value = uiState.maxDownloadSpeed?.toString() ?: "",
         unitContent = {
             Spacer(modifier = Modifier.width(16.dp))
-            var selectedSpeedValue by remember { mutableStateOf(downloadSpeedKBSValue) }
-            val isItemSelected: SingleDataConverterCallback<String, Boolean> = {
-                it == selectedSpeedValue
+            val isItemSelected: ComposableSingleDataConverterCallback<String, Boolean> = {
+                it == stringResourceLimitDataSpeedUnit(uiState.maxDownloadSpeedUnit)
             }
             Row(
                 modifier = Modifier.selectable(
                     selected = isItemSelected(stringResource(R.string.download_speed_kb_s)),
                     onClick = {
-                        selectedSpeedValue = downloadSpeedKBSValue
+                        onMaxDownloadSpeedUnitChange.invoke(LimitDataSpeedUnit.KB)
                     }
                 ),
                 verticalAlignment = Alignment.CenterVertically,
@@ -184,7 +215,7 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
                 modifier = Modifier.selectable(
                     selected = isItemSelected(downloadSpeedMBSValue),
                     onClick = {
-                        selectedSpeedValue = downloadSpeedMBSValue
+                        onMaxDownloadSpeedUnitChange.invoke(LimitDataSpeedUnit.MB)
                     }
                 ),
                 verticalAlignment = Alignment.CenterVertically,
@@ -193,17 +224,27 @@ private fun DownloadSettings(modifier: Modifier = Modifier) = Column(
                 Text(text = downloadSpeedMBSValue)
             }
         },
-        onValueChange = {
-            rememberValue = it
-        },
+        onValueChange = onMaxDownloadSpeedChange,
     )
     PaddingItemSeparator()
-    ClickSettingItem(
-        icon = R.drawable.ic_download_location,
-        title = "Downloaded file location",
-        subtitle = "/Storage/Emulated/0/Downloads"
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Show choosing save location
+        ClickSettingItem(
+            modifier = Modifier.weight(1f),
+            icon = R.drawable.ic_download_location,
+            title = stringResource(R.string.txt_settings_downloaded_file_location),
+            subtitle = uiState.saveLocationDirectory,
+            onClick = onChooseSaveLocation,
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Image(
+            modifier = Modifier
+                .size(26.dp)
+                .clickable(onClick = onChooseSaveLocation),
+            painter = painterResource(id = R.drawable.ic_browse),
+            contentDescription = null
+        )
     }
 }
 
@@ -272,7 +313,7 @@ private fun SelectionSettingItem(
                     isVisible = isSelectionShown,
                     text = "Select maximum concurrent downloads",
                     selectedValue = selectedValue,
-                    values = values,
+                    values = values.map { ValueSelectionDataItem(it, it) },
                     onValueChange = onValueChange,
                     onDismiss = {
                         isSelectionShown = false
@@ -354,5 +395,8 @@ private fun ItemSeparator(modifier: Modifier = Modifier) = Box(
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    SettingsScreen(modifier = Modifier.background(Color.White), onBack = {})
+    SettingsScreen(
+        modifier = Modifier.background(Color.White),
+        viewModel = hiltViewModel(),
+        onBack = {})
 }

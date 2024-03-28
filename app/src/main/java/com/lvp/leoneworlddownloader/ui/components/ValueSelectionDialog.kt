@@ -17,13 +17,13 @@ import com.lvp.leoneworlddownloader.utils.SingleDataCallback
 import com.lvp.leoneworlddownloader.utils.noRippleClickable
 
 @Composable
-fun ValueSelectionDialog(
+fun <T> ValueSelectionDialog(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
     text: String,
-    selectedValue: String,
-    values: List<String>,
-    onValueChange: SingleDataCallback<String>,
+    selectedValue: T,
+    values: List<ValueSelectionDataItem<T>>,
+    onValueChange: SingleDataCallback<T>,
     onDismiss: EmptyDataCallback,
 ) {
     InformationDialog(
@@ -37,16 +37,16 @@ fun ValueSelectionDialog(
                 var textModifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                if (values[it] == selectedValue) {
+                if (values[it].value == selectedValue) {
                     textModifier = textModifier.background(Color(0xFFFF752B))
                 }
                 textModifier = textModifier.padding(4.dp)
                 Text(
                     modifier = textModifier.noRippleClickable {
-                        onValueChange.invoke(values[it])
+                        onValueChange.invoke(values[it].value)
                         onDismiss.invoke()
                     },
-                    text = values[it],
+                    text = values[it].text,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     ),
@@ -56,14 +56,19 @@ fun ValueSelectionDialog(
     }
 }
 
+data class ValueSelectionDataItem<T>(
+    val text: String,
+    val value: T,
+)
+
 @Preview
 @Composable
 private fun ValueSelectionDialogPreview() {
-    ValueSelectionDialog(
+    ValueSelectionDialog<Int>(
         isVisible = true,
         text = "Preview",
-        selectedValue = "2",
-        values = listOf("1", "2", "3"),
+        selectedValue = 1,
+        values = listOf(ValueSelectionDataItem("1", 1)),
         onValueChange = {}) {
 
     }

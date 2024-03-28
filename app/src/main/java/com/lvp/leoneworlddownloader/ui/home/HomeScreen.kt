@@ -92,9 +92,24 @@ fun HomeScreen(
         }
         LEWDNavigationDrawer(
             drawerState = drawerState,
-            onFilterClicked = onNavigateFilter,
-            onSettingsClicked = onNavigateSettings,
-            onAboutClicked = onNavigateAbout,
+            onFilterClicked = {
+                onNavigateFilter.invoke()
+                scope.launch {
+                    drawerState.close()
+                }
+            },
+            onSettingsClicked = {
+                onNavigateSettings.invoke()
+                scope.launch {
+                    drawerState.close()
+                }
+            },
+            onAboutClicked = {
+                onNavigateAbout.invoke()
+                scope.launch {
+                    drawerState.close()
+                }
+            },
         ) {
             val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
             LaunchedEffect(lifecycleState) {
