@@ -9,10 +9,12 @@ class DefaultUserRepository @Inject constructor(
     private val prefs: AppPrefs,
 ) : UserRepository {
 
-    override suspend fun ensureDefaultSettingsAvailable() {
+    override suspend fun ensureDefaultSettingsAvailable(dirPath: String) {
         val settings = getSettings()
         if (settings == null) {
-            saveSettings(AppSettings.Default)
+            saveSettings(AppSettings.Default.copy(
+                saveLocationDirectory = dirPath
+            ))
         }
     }
 

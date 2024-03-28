@@ -24,8 +24,9 @@ class LEWDApplication : Application() {
 
     private fun initSettings() {
         MainScope().launch {
-            userRepository.ensureDefaultSettingsAvailable()
-            downloadRepository.ensureDownloadDirectoryAvailable()
+            val dirPath = getExternalFilesDir("Downloads")!!.absolutePath
+            userRepository.ensureDefaultSettingsAvailable(dirPath)
+            downloadRepository.ensureDownloadDirectoryAvailable(dirPath)
         }
     }
 

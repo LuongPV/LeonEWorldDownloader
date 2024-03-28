@@ -1,6 +1,5 @@
 package com.lvp.leoneworlddownloader.data.repositories.download
 
-import com.lvp.leoneworlddownloader.constants.INITIAL_DOWNLOAD_DIRECTORY
 import com.lvp.leoneworlddownloader.data.IdGenerator
 import com.lvp.leoneworlddownloader.data.apis.DownloadableApi
 import com.lvp.leoneworlddownloader.data.db.daos.DownloadInfoDao
@@ -64,8 +63,8 @@ class DefaultDownloadRepository @Inject constructor(
         }
     }
 
-    override suspend fun ensureDownloadDirectoryAvailable() {
-        File(INITIAL_DOWNLOAD_DIRECTORY).mkdirs()
+    override suspend fun ensureDownloadDirectoryAvailable(dirPath: String) {
+        File(dirPath).mkdirs()
     }
 
 }

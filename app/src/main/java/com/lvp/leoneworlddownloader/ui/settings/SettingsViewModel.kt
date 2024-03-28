@@ -2,7 +2,6 @@ package com.lvp.leoneworlddownloader.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lvp.leoneworlddownloader.constants.INITIAL_DOWNLOAD_DIRECTORY
 import com.lvp.leoneworlddownloader.data.models.AppSettings
 import com.lvp.leoneworlddownloader.data.models.AppTheme
 import com.lvp.leoneworlddownloader.data.models.LimitDataSpeedUnit
@@ -105,7 +104,7 @@ data class SettingsUiState(
             maxConcurrentDownloads = 2,
             maxDownloadSpeed = null,
             maxDownloadSpeedUnit = LimitDataSpeedUnit.KB,
-            saveLocationDirectory = INITIAL_DOWNLOAD_DIRECTORY
+            saveLocationDirectory = ""
         )
     }
 }

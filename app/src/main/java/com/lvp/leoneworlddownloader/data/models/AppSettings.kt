@@ -1,7 +1,5 @@
 package com.lvp.leoneworlddownloader.data.models
 
-import com.lvp.leoneworlddownloader.constants.INITIAL_DOWNLOAD_DIRECTORY
-
 data class AppSettings(
     val theme: AppTheme,
     val isShowingDownloadPercentage: Boolean,
@@ -17,7 +15,7 @@ data class AppSettings(
             maxConcurrentDownloads = 2,
             maxDownloadSpeed = null,
             maxDownloadSpeedUnit = LimitDataSpeedUnit.KB,
-            saveLocationDirectory = INITIAL_DOWNLOAD_DIRECTORY
+            saveLocationDirectory = ""
         )
     }
 }

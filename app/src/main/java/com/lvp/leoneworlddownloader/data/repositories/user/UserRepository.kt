@@ -5,7 +5,7 @@ import com.lvp.leoneworlddownloader.utils.SingleDataConverterCallback
 
 interface UserRepository {
 
-    suspend fun ensureDefaultSettingsAvailable()
+    suspend fun ensureDefaultSettingsAvailable(dirPath: String)
 
     suspend fun getSettings(): AppSettings?
 
