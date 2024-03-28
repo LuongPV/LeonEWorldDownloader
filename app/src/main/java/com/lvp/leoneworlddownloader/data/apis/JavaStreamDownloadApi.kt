@@ -39,7 +39,7 @@ class JavaStreamDownloadApi @Inject constructor() : DownloadableApi {
                                 total += bytesRead
                                 send(DownloadProgress(DownloadProgress.State.PROGRESSING, total))
                             }
-                            send(DownloadProgress(DownloadProgress.State.COMPLETED))
+                            send(DownloadProgress(DownloadProgress.State.COMPLETED, total))
                         }
                     }
                 }
