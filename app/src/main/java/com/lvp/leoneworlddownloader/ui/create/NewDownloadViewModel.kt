@@ -21,7 +21,7 @@ class NewDownloadViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         NewDownloadUiState(
-            url = "https://file-examples.com/storage/fe1b802e1565fe057a1d758/2017/04/file_example_MP4_1920_18MG.mp4",
+            url = "https://file-examples.com/storage/fe1b802e1565fe057a1d758/2017/11/file_example_MP3_5MG.mp3",
             showInvalidUrlDialog = false,
         )
     )
