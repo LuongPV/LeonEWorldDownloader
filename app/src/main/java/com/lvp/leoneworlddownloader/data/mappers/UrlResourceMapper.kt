@@ -14,7 +14,7 @@ object UrlResourceMapper {
             fileName = urlResource.fileName,
             fileType = urlResource.fileType,
             fileSize = urlResource.fileSize,
-            bytesDownloaded = 0,
+            downloadedSize = 0,
             downloadStatus = DownloadStatus.QUEUED,
             saveLocation = urlResource.saveLocation,
             dateAdded = getCurrentDateTime(),

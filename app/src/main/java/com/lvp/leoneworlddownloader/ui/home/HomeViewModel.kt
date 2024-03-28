@@ -7,6 +7,7 @@ import com.lvp.leoneworlddownloader.data.models.DownloadInfo
 import com.lvp.leoneworlddownloader.data.models.DownloadSortType
 import com.lvp.leoneworlddownloader.data.models.SortOrder
 import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
+import com.lvp.leoneworlddownloader.utils.swapItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +43,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun processDownloadAction(id: String, downloadAction: DownloadAction) {
-
+        viewModelScope.launch {
+            val downloadInfo = downloadRepository.getDownload(id)!!
+            downloadRepository.startDownloadProgress(downloadInfo).collect {
+                _uiState.update { uiState ->
+                    uiState.copy(downloadInfos = _uiState.value.downloadInfos.swapItem(id, it))
+                }
+            }
+        }
     }
 
     fun removeDownload(downloadId: String) {

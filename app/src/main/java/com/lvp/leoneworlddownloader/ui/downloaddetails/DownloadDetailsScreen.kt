@@ -97,7 +97,7 @@ fun DownloadDetailsScreen(
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                val finalRatio = downloadInfo.bytesDownloaded / downloadInfo.fileSize.toFloat()
+                val finalRatio = downloadInfo.downloadedSize / downloadInfo.fileSize.toFloat()
                 var currentRatio by remember { mutableFloatStateOf(0f) }
                 LaunchedEffect(Unit) {
                     val va = ValueAnimator.ofFloat(0f, finalRatio)
@@ -158,7 +158,7 @@ private fun createStringMap(downloadInfo: DownloadInfo): Map<String, String> {
         ),
         Pair(
             stringResource(R.string.txt_download_detail_downloaded),
-            getHumanReadableFileSize(downloadInfo.bytesDownloaded) + " / " + getHumanReadableFileSize(
+            getHumanReadableFileSize(downloadInfo.downloadedSize) + " / " + getHumanReadableFileSize(
                 downloadInfo.fileSize
             )
         ),

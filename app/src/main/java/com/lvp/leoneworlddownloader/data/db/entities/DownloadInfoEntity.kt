@@ -20,8 +20,8 @@ data class DownloadInfoEntity(
     val fileType: FileType,
     @ColumnInfo("file_size")
     val fileSize: Long,
-    @ColumnInfo("bytes_download")
-    val bytesDownloaded: Long,
+    @ColumnInfo("downloaded_size")
+    val downloadedSize: Long,
     @ColumnInfo("download_status")
     val downloadStatus: DownloadStatus,
     @ColumnInfo("save_location")

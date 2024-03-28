@@ -1,16 +1,23 @@
 package com.lvp.leoneworlddownloader.data.repositories.download
 
 import com.lvp.leoneworlddownloader.data.IdGenerator
+import com.lvp.leoneworlddownloader.data.apis.DownloadableApi
 import com.lvp.leoneworlddownloader.data.db.daos.DownloadInfoDao
 import com.lvp.leoneworlddownloader.data.mappers.DownloadInfoMapper
 import com.lvp.leoneworlddownloader.data.mappers.UrlResourceMapper
 import com.lvp.leoneworlddownloader.data.models.DownloadInfo
+import com.lvp.leoneworlddownloader.data.models.DownloadProgress
+import com.lvp.leoneworlddownloader.data.models.DownloadStatus
 import com.lvp.leoneworlddownloader.data.models.UrlResource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+
 
 class DefaultDownloadRepository @Inject constructor(
     private val idGenerator: IdGenerator,
     private val downloadInfoDao: DownloadInfoDao,
+    private val downloadableApi: DownloadableApi,
 ) : DownloadRepository {
 
     override suspend fun getDownloads(): List<DownloadInfo> {
@@ -34,6 +41,25 @@ class DefaultDownloadRepository @Inject constructor(
         downloadInfoDao.insertDownload(with(urlResource) {
             UrlResourceMapper.transform(this, idGenerator.generateString())
         })
+    }
+
+    override fun startDownloadProgress(downloadInfo: DownloadInfo): Flow<DownloadInfo> {
+        return downloadableApi.downloadData(downloadInfo).map {
+            val downloadStatus = when (it.state) {
+                DownloadProgress.State.PROGRESSING -> DownloadStatus.DOWNLOADING
+                DownloadProgress.State.COMPLETED -> DownloadStatus.DOWNLOADED
+                DownloadProgress.State.ERROR -> DownloadStatus.ERROR
+            }
+            downloadInfoDao.insertDownload(
+                DownloadInfoMapper.transform(
+                    downloadInfo.copy(
+                        downloadStatus = downloadStatus,
+                        downloadedSize = it.downloadedSize
+                    )
+                )
+            )
+            getDownload(downloadInfo.id)!!
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.lvp.leoneworlddownloader.data.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.lvp.leoneworlddownloader.data.db.entities.DownloadInfoEntity
 
@@ -17,7 +18,7 @@ interface DownloadInfoDao {
     @Query("delete from download_info where id = :downloadId")
     suspend fun removeDownload(downloadId: String)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDownload(downloadInfoEntity: DownloadInfoEntity)
 
 }

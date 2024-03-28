@@ -86,7 +86,7 @@ fun DownloadItem(
             LinearProgressIndicator(
                 trackColor = Color(0xFFCECECE),
                 color = getDownloadStatusColor(downloadStatus = downloadInfo.downloadStatus),
-                progress = (downloadInfo.bytesDownloaded / downloadInfo.fileSize.toDouble()).toFloat(),
+                progress = (downloadInfo.downloadedSize / downloadInfo.fileSize.toDouble()).toFloat(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
@@ -178,7 +178,7 @@ private fun DownloadItemPreview() {
             fileName = "test file download.mp3",
             fileType = FileType.AUDIO,
             fileSize = 4100000,
-            bytesDownloaded = 3500000,
+            downloadedSize = 3500000,
             downloadStatus = DownloadStatus.DOWNLOADING,
             saveLocation = "/Storage/Emulated/0/DCIM/Image.jpg",
             dateAdded = LocalDateTime.now(),

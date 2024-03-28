@@ -40,10 +40,6 @@ abstract class GeneralModule {
 
     @Binds
     @Singleton
-    abstract fun bindBrowsableApi(implementation: OkHttpBrowsableApi): BrowsableApi
-
-    @Binds
-    @Singleton
     abstract fun bindUserRepository(implementation: DefaultUserRepository): UserRepository
 
     companion object {
