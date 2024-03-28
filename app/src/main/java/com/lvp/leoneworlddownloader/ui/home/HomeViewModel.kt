@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
+    fun getDownloads() {
         viewModelScope.launch {
             val downloads = downloadRepository.getDownloads()
             _uiState.update {

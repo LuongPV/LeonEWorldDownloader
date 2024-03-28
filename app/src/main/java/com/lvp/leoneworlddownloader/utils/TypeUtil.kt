@@ -6,8 +6,6 @@ typealias EmptyDataCallback = () -> Unit
 
 typealias SingleDataCallback<T> = (T) -> Unit
 
-typealias SingleDataReturnCallback<T> = () -> T
-
 typealias SingleDataConverterCallback<T, R> = (T) -> R
 
 typealias DoubleDataCallback<T, R> = (T, R) -> Unit
