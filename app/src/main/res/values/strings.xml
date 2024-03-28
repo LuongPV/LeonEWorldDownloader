@@ -61,4 +61,11 @@
     <string name="txt_new_download_save_location">Save location:</string>
     <string name="txt_dlg_invalid_url">You entered invalid URL, please check again</string>
     <string name="txt_add_download">Add</string>
+    <string name="txt_download_detail_file_name">File name:</string>
+    <string name="txt_download_detail_url">Url:</string>
+    <string name="txt_download_detail_file_type">File type:</string>
+    <string name="txt_download_detail_status">Status:</string>
+    <string name="txt_download_detail_save_location">Save location:</string>
+    <string name="txt_download_detail_date_added">Date added:</string>
+    <string name="txt_download_detail_downloaded">Downloaded:</string>
 </resources>

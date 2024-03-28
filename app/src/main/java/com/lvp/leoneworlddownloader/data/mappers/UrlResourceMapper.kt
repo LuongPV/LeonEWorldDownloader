@@ -1,7 +1,9 @@
 package com.lvp.leoneworlddownloader.data.mappers
 
 import com.lvp.leoneworlddownloader.data.db.entities.DownloadInfoEntity
+import com.lvp.leoneworlddownloader.data.models.DownloadStatus
 import com.lvp.leoneworlddownloader.data.models.UrlResource
+import com.lvp.leoneworlddownloader.utils.getCurrentDateTime
 
 object UrlResourceMapper {
 
@@ -10,12 +12,12 @@ object UrlResourceMapper {
             id = generatedId,
             url = urlResource.url,
             fileName = urlResource.fileName,
-            fileType = "",
-            fileSize = 410000,
+            fileType = urlResource.fileType,
+            fileSize = urlResource.fileSize,
             bytesDownloaded = 0,
-            downloadStatus = "",
-            saveLocation = "",
-            dateAdded = "",
+            downloadStatus = DownloadStatus.QUEUED,
+            saveLocation = urlResource.saveLocation,
+            dateAdded = getCurrentDateTime(),
         )
     }
 

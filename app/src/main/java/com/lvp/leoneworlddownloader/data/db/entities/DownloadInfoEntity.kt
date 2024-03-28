@@ -3,8 +3,11 @@ package com.lvp.leoneworlddownloader.data.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.lvp.leoneworlddownloader.data.models.DownloadStatus
+import com.lvp.leoneworlddownloader.data.models.FileType
+import java.time.LocalDateTime
 
-@Entity
+@Entity(tableName = "download_info")
 data class DownloadInfoEntity(
     @PrimaryKey
     @ColumnInfo("id")
@@ -14,15 +17,15 @@ data class DownloadInfoEntity(
     @ColumnInfo("file_name")
     val fileName: String,
     @ColumnInfo("file_type")
-    val fileType: String,
+    val fileType: FileType,
     @ColumnInfo("file_size")
     val fileSize: Long,
     @ColumnInfo("bytes_download")
     val bytesDownloaded: Long,
     @ColumnInfo("download_status")
-    val downloadStatus: String,
+    val downloadStatus: DownloadStatus,
     @ColumnInfo("save_location")
     val saveLocation: String,
     @ColumnInfo("date_added")
-    val dateAdded: String,
+    val dateAdded: LocalDateTime,
 )

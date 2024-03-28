@@ -8,13 +8,13 @@ import com.lvp.leoneworlddownloader.data.db.entities.DownloadInfoEntity
 @Dao
 interface DownloadInfoDao {
 
-    @Query("select * from downloadinfoentity")
+    @Query("select * from download_info")
     suspend fun getDownloads(): List<DownloadInfoEntity>
 
-    @Query("select * from downloadinfoentity where id = :downloadId")
+    @Query("select * from download_info where id = :downloadId")
     suspend fun getDownload(downloadId: String): DownloadInfoEntity?
 
-    @Query("delete from downloadinfoentity where id = :downloadId")
+    @Query("delete from download_info where id = :downloadId")
     suspend fun removeDownload(downloadId: String)
 
     @Insert

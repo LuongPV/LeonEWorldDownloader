@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,7 @@ import com.lvp.leoneworlddownloader.resources.stringResourceFileType
 import com.lvp.leoneworlddownloader.ui.components.BackTopBar
 import com.lvp.leoneworlddownloader.ui.components.InfiniteLoading
 import com.lvp.leoneworlddownloader.utils.EmptyDataCallback
+import com.lvp.leoneworlddownloader.utils.formatDateTime
 import com.lvp.leoneworlddownloader.utils.getDownloadStatusColor
 import com.lvp.leoneworlddownloader.utils.getHumanReadableFileSize
 
@@ -148,18 +150,27 @@ private fun DownloadDetailsSection(modifier: Modifier = Modifier, downloadInfo: 
 @Composable
 private fun createStringMap(downloadInfo: DownloadInfo): Map<String, String> {
     return mapOf(
-        Pair("File name:", downloadInfo.fileName),
-        Pair("Url:", downloadInfo.url),
-        Pair("File type:", stringResourceFileType(downloadInfo.fileType)),
+        Pair(stringResource(R.string.txt_download_detail_file_name), downloadInfo.fileName),
+        Pair(stringResource(R.string.txt_download_detail_url), downloadInfo.url),
         Pair(
-            "Downloaded:",
+            stringResource(R.string.txt_download_detail_file_type),
+            stringResourceFileType(downloadInfo.fileType)
+        ),
+        Pair(
+            stringResource(R.string.txt_download_detail_downloaded),
             getHumanReadableFileSize(downloadInfo.bytesDownloaded) + " / " + getHumanReadableFileSize(
                 downloadInfo.fileSize
             )
         ),
-        Pair("Status:", stringResourceDownloadStatus(downloadInfo.downloadStatus)),
-        Pair("Save location:", downloadInfo.saveLocation),
-        Pair("Date added:", downloadInfo.dateAdded.toString()),
+        Pair(
+            stringResource(R.string.txt_download_detail_status),
+            stringResourceDownloadStatus(downloadInfo.downloadStatus)
+        ),
+        Pair(stringResource(R.string.txt_download_detail_save_location), downloadInfo.saveLocation),
+        Pair(
+            stringResource(R.string.txt_download_detail_date_added),
+            formatDateTime(downloadInfo.dateAdded)
+        ),
     )
 }
 

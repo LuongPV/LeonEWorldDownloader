@@ -168,7 +168,6 @@ fun getIconByType(fileType: FileType): Int {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 private fun DownloadItemPreview() {
