@@ -58,24 +58,22 @@ fun DownloadDetailsScreen(
     viewModel: DownloadDetailsViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    if (uiState.downloadInfo == null) {
-        InfiniteLoading()
-        return
-    }
     Box(
         modifier = Modifier.background(Color.White),
         contentAlignment = Alignment.BottomCenter,
     ) {
-        val downloadInfo = uiState.downloadInfo!!
-        Image(
-            painter = painterResource(drawableResourceBackgroundFileType(downloadInfo.fileType)),
-            contentScale = ContentScale.FillWidth,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 620.dp)
-                .alpha(0.15f),
-        )
+        val downloadInfo = uiState.downloadInfo
+        if (downloadInfo != null) {
+            Image(
+                painter = painterResource(drawableResourceBackgroundFileType(downloadInfo.fileType)),
+                contentScale = ContentScale.FillWidth,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 620.dp)
+                    .alpha(0.15f),
+            )
+        }
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -89,6 +87,10 @@ fun DownloadDetailsScreen(
                 subtitle = R.string.txt_sub_download_details,
                 onBack = onBack,
             )
+            if (downloadInfo == null) {
+                InfiniteLoading()
+                return
+            }
             Spacer(modifier = Modifier.height(32.dp))
             Box(
                 contentAlignment = Alignment.Center,
