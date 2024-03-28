@@ -1,5 +1,6 @@
 package com.lvp.leoneworlddownloader.data.repositories.download
 
+import com.lvp.leoneworlddownloader.constants.INITIAL_DOWNLOAD_DIRECTORY
 import com.lvp.leoneworlddownloader.data.IdGenerator
 import com.lvp.leoneworlddownloader.data.apis.DownloadableApi
 import com.lvp.leoneworlddownloader.data.db.daos.DownloadInfoDao
@@ -11,6 +12,7 @@ import com.lvp.leoneworlddownloader.data.models.DownloadStatus
 import com.lvp.leoneworlddownloader.data.models.UrlResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.File
 import javax.inject.Inject
 
 
@@ -60,6 +62,10 @@ class DefaultDownloadRepository @Inject constructor(
             )
             getDownload(downloadInfo.id)!!
         }
+    }
+
+    override suspend fun ensureDownloadDirectoryAvailable() {
+        File(INITIAL_DOWNLOAD_DIRECTORY).mkdirs()
     }
 
 }

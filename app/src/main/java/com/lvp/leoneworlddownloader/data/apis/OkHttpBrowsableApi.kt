@@ -14,7 +14,7 @@ class OkHttpBrowsableApi @Inject constructor(
     private val okHttpClient: OkHttpClient,
 ) : BrowsableApi {
 
-    override suspend fun inspectUrl(url: String, saveLocation: String): UrlResource {
+    override suspend fun inspectUrl(url: String, saveLocationDirectory: String): UrlResource {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder().url(url).method("HEAD", null).build()
             val response = okHttpClient.newCall(request).execute()
@@ -26,7 +26,7 @@ class OkHttpBrowsableApi @Inject constructor(
                 fileName = fileName,
                 fileType = FileType.find(contentType),
                 fileSize = contentLength,
-                saveLocation = "$saveLocation/$fileName",
+                saveLocation = "$saveLocationDirectory${File.separator}$fileName",
                 isResolved = true,
             )
         }

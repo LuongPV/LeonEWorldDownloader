@@ -16,4 +16,6 @@ interface DownloadRepository {
 
     fun startDownloadProgress(downloadInfo: DownloadInfo): Flow<DownloadInfo>
 
+    suspend fun ensureDownloadDirectoryAvailable()
+
 }

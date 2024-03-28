@@ -1,3 +1,6 @@
 package com.lvp.leoneworlddownloader.constants
 
-const val INITIAL_DOWNLOAD_DIRECTORY = "/Storage/Emulated/0/Downloads"
+import android.os.Environment
+
+val INITIAL_DOWNLOAD_DIRECTORY: String =
+    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath

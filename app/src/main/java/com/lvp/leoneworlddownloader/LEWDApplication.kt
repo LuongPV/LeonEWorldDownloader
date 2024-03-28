@@ -1,6 +1,7 @@
 package com.lvp.leoneworlddownloader
 
 import android.app.Application
+import com.lvp.leoneworlddownloader.data.repositories.download.DownloadRepository
 import com.lvp.leoneworlddownloader.data.repositories.user.UserRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.MainScope
@@ -13,6 +14,9 @@ class LEWDApplication : Application() {
     @Inject
     lateinit var userRepository: UserRepository
 
+    @Inject
+    lateinit var downloadRepository: DownloadRepository
+
     override fun onCreate() {
         super.onCreate()
         initSettings()
@@ -21,6 +25,7 @@ class LEWDApplication : Application() {
     private fun initSettings() {
         MainScope().launch {
             userRepository.ensureDefaultSettingsAvailable()
+            downloadRepository.ensureDownloadDirectoryAvailable()
         }
     }
 

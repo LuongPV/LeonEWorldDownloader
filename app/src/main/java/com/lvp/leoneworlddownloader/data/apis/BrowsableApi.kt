@@ -4,6 +4,6 @@ import com.lvp.leoneworlddownloader.data.models.UrlResource
 
 interface BrowsableApi {
 
-    suspend fun inspectUrl(url: String, saveLocation: String): UrlResource
+    suspend fun inspectUrl(url: String, saveLocationDirectory: String): UrlResource
 
 }

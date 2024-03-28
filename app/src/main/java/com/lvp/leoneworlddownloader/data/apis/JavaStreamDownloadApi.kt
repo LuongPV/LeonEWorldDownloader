@@ -19,10 +19,15 @@ class JavaStreamDownloadApi @Inject constructor() : DownloadableApi {
         return flow {
             try {
                 BufferedInputStream(withContext(Dispatchers.IO) {
+                    val downloadFile = File(downloadInfo.saveLocation)
+                    if (!downloadFile.exists()) {
+                        downloadFile.createNewFile()
+                    }
+                    println("Download file path: ${downloadFile.absolutePath}")
                     URL(downloadInfo.url).openStream()
                 }).use { `in` ->
                     emit(DownloadProgress(DownloadProgress.State.PROGRESSING, 0))
-                    FileOutputStream("${downloadInfo.saveLocation}${File.separator}${downloadInfo.fileName}").use { fileOutputStream ->
+                    FileOutputStream(downloadInfo.saveLocation).use { fileOutputStream ->
                         val dataBuffer = ByteArray(1024)
                         var total = 0L
                         var bytesRead: Int
